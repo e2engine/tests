@@ -89,7 +89,10 @@ func TestSocketCRUDTestSuite(t *testing.T) {
 	}
 
 	// start gateway service
-	gateway := h.StartService(ctx, "gateway-http-path")
+	serviceCtx, serviceCancel := context.WithCancel(context.Background())
+	t.Cleanup(serviceCancel)
+
+	gateway := h.StartService(serviceCtx, "gateway-http-path")
 	t.Cleanup(func() {
 		gateway.Stop(t)
 	})

@@ -181,8 +181,11 @@ func TestTransportKind(t *testing.T) {
 
 			h := harness.New(t, "../bin/cli", test.configPath, path.Join(t.TempDir(), "data"))
 			if len(test.services) > 0 {
+				serviceCtx, serviceCancel := context.WithCancel(context.Background())
+				t.Cleanup(serviceCancel)
+
 				for _, service := range test.services {
-					s := h.StartService(ctx, service.Name, service.Args...)
+					s := h.StartService(serviceCtx, service.Name, service.Args...)
 					t.Cleanup(func() {
 						s.Stop(t)
 					})
@@ -308,6 +311,10 @@ func readRunnerPid(t *testing.T, logPath string) (int, bool) {
 
 	f, err := os.Open(logPath)
 	if err != nil {
+		if os.IsNotExist(err) {
+			return 0, false
+		}
+
 		t.Fatalf("Failed to open log file: %v", err)
 	}
 	defer f.Close()
@@ -343,7 +350,6 @@ func readRunnerPid(t *testing.T, logPath string) (int, bool) {
 		t.Fatalf("Failed to read log file: %v", err)
 	}
 
-	t.Fatalf("Runner PID not found in log file %s", logPath)
 	return 0, false
 }
 
@@ -365,8 +371,11 @@ func TestDirectTransportWaitsForExecution(t *testing.T) {
 		path.Join(t.TempDir(), "data"),
 	)
 
+	serviceCtx, serviceCancel := context.WithCancel(context.Background())
+	t.Cleanup(serviceCancel)
+
 	service := h.StartService(
-		ctx,
+		serviceCtx,
 		"gateway-http-path",
 		"2",
 	)
@@ -440,7 +449,10 @@ func TestSocketTransportSequentialExecutions(t *testing.T) {
 		path.Join(t.TempDir(), "data"),
 	)
 
-	service := h.StartService(ctx, "gateway-http-path")
+	serviceCtx, serviceCancel := context.WithCancel(context.Background())
+	t.Cleanup(serviceCancel)
+
+	service := h.StartService(serviceCtx, "gateway-http-path")
 	t.Cleanup(func() {
 		service.Stop(t)
 	})

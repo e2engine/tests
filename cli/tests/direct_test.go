@@ -53,6 +53,11 @@ func TestDirect(t *testing.T) {
 					)
 					defer cancel()
 
+					serviceCtx, serviceCancel := context.WithCancel(
+						context.Background(),
+					)
+					t.Cleanup(serviceCancel)
+
 					h := harness.New(
 						t,
 						"../bin/cli",
@@ -61,7 +66,7 @@ func TestDirect(t *testing.T) {
 					)
 
 					for _, service := range test.services {
-						s := h.StartService(ctx, service)
+						s := h.StartService(serviceCtx, service)
 						t.Cleanup(func() {
 							s.Stop(t)
 						})

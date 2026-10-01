@@ -48,7 +48,12 @@ func TestDirect(t *testing.T) {
 			)
 
 			for _, service := range test.services {
-				s := h.StartService(ctx, service)
+				serviceCtx, serviceCancel := context.WithCancel(
+					context.Background(),
+				)
+				t.Cleanup(serviceCancel)
+
+				s := h.StartService(serviceCtx, service)
 				t.Cleanup(func() {
 					s.Stop(t)
 				})

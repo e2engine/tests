@@ -35,7 +35,10 @@ func TestRealNotCallingDependency(t *testing.T) {
 	)
 
 	// start ok service
-	okService := h.StartService(ctx, "ok-http")
+	serviceCtx, serviceCancel := context.WithCancel(context.Background())
+	t.Cleanup(serviceCancel)
+
+	okService := h.StartService(serviceCtx, "ok-http")
 	t.Cleanup(func() {
 		okService.Stop(t)
 	})
