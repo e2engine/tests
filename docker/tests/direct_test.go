@@ -43,7 +43,6 @@ func TestDirect(t *testing.T) {
 			h := harness.New(
 				t,
 				"",
-				path.Join(t.TempDir(), "testdata"),
 				"e2engine-network",
 			)
 

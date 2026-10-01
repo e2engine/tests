@@ -14,14 +14,14 @@ import (
 )
 
 type Harness struct {
-	t           *testing.T
-	configPath  string
-	dataDir     string
-	testDataDir string
-	network     string
+	t          *testing.T
+	configPath string
+	dataDir    string
+	dataVolume string
+	network    string
 }
 
-func New(t *testing.T, configPath, testDataDir, network string) *Harness {
+func New(t *testing.T, configPath, network string) *Harness {
 	t.Helper()
 
 	if configPath == "" {
@@ -38,28 +38,76 @@ func New(t *testing.T, configPath, testDataDir, network string) *Harness {
 		t.Fatalf("Failed to resolve data directory %q: %v", dataDir, err)
 	}
 
-	testDataDir, err = filepath.Abs(testDataDir)
-	if err != nil {
-		t.Fatalf("Failed to resolve testdata directory %q: %v", testDataDir, err)
+	volumeCmd := exec.Command("docker", "volume", "create")
+	var volumeStdoutBuf bytes.Buffer
+	var volumeStderrBuf bytes.Buffer
+	volumeCmd.Stdout = &volumeStdoutBuf
+	volumeCmd.Stderr = &volumeStderrBuf
+
+	if err = volumeCmd.Run(); err != nil {
+		t.Fatalf(
+			"Failed to create Docker data volume: %v, stderr: %s",
+			err,
+			volumeStderrBuf.String(),
+		)
 	}
 
-	cmd := exec.Command("docker", "network", "create", network)
-	var stdoutBuf bytes.Buffer
-	var stderrBuf bytes.Buffer
-	cmd.Stdout = &stdoutBuf
-	cmd.Stderr = &stderrBuf
+	dataVolume := strings.TrimSpace(volumeStdoutBuf.String())
+	if dataVolume == "" {
+		t.Fatal("Docker returned an empty data volume name")
+	}
 
-	if err = cmd.Run(); err != nil {
+	t.Cleanup(func() {
+		cmdCleanup := exec.Command(
+			"docker",
+			"volume",
+			"rm",
+			"-f",
+			dataVolume,
+		)
+
+		var stderrBuf bytes.Buffer
+		cmdCleanup.Stderr = &stderrBuf
+
+		if errCleanup := cmdCleanup.Run(); errCleanup != nil {
+			t.Errorf(
+				"Failed to remove Docker data volume %q: %v, stderr: %s",
+				dataVolume,
+				errCleanup,
+				stderrBuf.String(),
+			)
+		}
+	})
+
+	networkCmd := exec.Command(
+		"docker",
+		"network",
+		"create",
+		network,
+	)
+
+	var networkStdoutBuf bytes.Buffer
+	var networkStderrBuf bytes.Buffer
+	networkCmd.Stdout = &networkStdoutBuf
+	networkCmd.Stderr = &networkStderrBuf
+
+	if err = networkCmd.Run(); err != nil {
 		t.Fatalf(
 			"Failed to create Docker network %q: %v, stderr: %s",
 			network,
 			err,
-			stderrBuf.String(),
+			networkStderrBuf.String(),
 		)
 	}
 
 	t.Cleanup(func() {
-		cmdCleanup := exec.Command("docker", "network", "rm", network)
+		cmdCleanup := exec.Command(
+			"docker",
+			"network",
+			"rm",
+			network,
+		)
+
 		var stderrBuf bytes.Buffer
 		cmdCleanup.Stderr = &stderrBuf
 
@@ -74,11 +122,11 @@ func New(t *testing.T, configPath, testDataDir, network string) *Harness {
 	})
 
 	return &Harness{
-		t:           t,
-		configPath:  configPath,
-		dataDir:     dataDir,
-		testDataDir: testDataDir,
-		network:     network,
+		t:          t,
+		configPath: configPath,
+		dataDir:    dataDir,
+		dataVolume: dataVolume,
+		network:    network,
 	}
 }
 
@@ -97,7 +145,7 @@ func (h *Harness) RunCommand(
 		"--network", h.network,
 		"-v", filepath.Dir(h.configPath) + ":" + containerConfigDir + ":ro",
 		"-v", h.dataDir + ":/data",
-		"-v", h.testDataDir + ":/testdata",
+		"-v", h.dataVolume + ":/testdata",
 		"-e", "E2ENGINE_CONFIG_PATH=" + containerConfigPath,
 		"-e", "E2ENGINE_DATA_DIR=/testdata",
 	}
