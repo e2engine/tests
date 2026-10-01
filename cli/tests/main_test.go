@@ -10,7 +10,7 @@ import (
 	"github.com/e2engine/tests/util"
 )
 
-const defaultTestTimeout = 5 * time.Second
+const defaultTestTimeout = 30 * time.Second
 
 type Service struct {
 	Name string

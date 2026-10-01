@@ -49,8 +49,10 @@ func TestFixtureMiss(t *testing.T) {
 			defer cancel()
 
 			h := harness.New(t, "../bin/cli", "", path.Join(t.TempDir(), "data"))
+			serviceCtx, serviceCancel := context.WithCancel(context.Background())
+			t.Cleanup(serviceCancel)
 			for _, service := range test.services {
-				s := h.StartService(ctx, service)
+				s := h.StartService(serviceCtx, service)
 				t.Cleanup(func() {
 					s.Stop(t)
 				})

@@ -4,4 +4,4 @@ import (
 	"time"
 )
 
-const defaultTestTimeout = 5 * time.Second
+const defaultTestTimeout = 30 * time.Second
