@@ -1,0 +1,5 @@
+logger:
+  sinks:
+    - kind: file
+      level: debug
+      path: "../data/e2engine.log"

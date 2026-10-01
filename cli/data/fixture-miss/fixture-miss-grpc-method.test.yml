@@ -1,0 +1,24 @@
+kind: Test
+version: 1.0.0
+name: fixture-miss-grpc-method
+description: checks gateway response and detects a fixture miss in the mocked gRPC entitlements service
+spec:
+  tags:
+    - e2e
+    - routing
+  request:
+    http:
+      method: GET
+      url: http://127.0.0.1:8082/check
+  expect:
+    http:
+      status: 200
+      body: '{"status":"ok"}'
+    calls:
+      - service_id: entitlements
+        count: 1
+        grpc:
+          service: entitlements.v1.EntitlementsService
+          method: UnknownMethod
+          message:
+            customer_id: customer-1

@@ -1,0 +1,13 @@
+kind: Test
+version: 1.0.0
+name: http-request-empty-url
+
+spec:
+  request:
+    http:
+      method: GET
+      url: ""
+
+  expect:
+    http:
+      status: 200

@@ -1,0 +1,10 @@
+kind: Environment
+version: 1.0.0
+name: invalid-service-mode
+
+spec:
+  services:
+    - id: service
+      kind: http
+      mode: proxy
+      address: 127.0.0.1:8081

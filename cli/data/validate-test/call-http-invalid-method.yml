@@ -1,0 +1,19 @@
+kind: Test
+version: 1.0.0
+name: call-http-invalid-method
+
+spec:
+  request:
+    http:
+      method: GET
+      url: http://127.0.0.1:8080/check
+
+  expect:
+    http:
+      status: 200
+
+    calls:
+      - service_id: dependency
+        http:
+          method: CONNECT
+          path: /healthz

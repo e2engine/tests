@@ -1,0 +1,10 @@
+kind: Environment
+version: 1.0.0
+name: mocked-without-fixtures
+
+spec:
+  services:
+    - id: service
+      kind: http
+      mode: mocked
+      address: 127.0.0.1:8081

@@ -1,0 +1,13 @@
+kind: Test
+version: 1.0.0
+name: http-request-invalid-scheme
+
+spec:
+  request:
+    http:
+      method: GET
+      url: ftp://127.0.0.1/file
+
+  expect:
+    http:
+      status: 200

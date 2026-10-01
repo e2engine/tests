@@ -1,0 +1,14 @@
+kind: Test
+version: 1.0.0
+name: grpc-request-message-omitted-valid
+
+spec:
+  request:
+    grpc:
+      target: 127.0.0.1:8083
+      service: example.Service
+      method: Check
+
+  expect:
+    grpc:
+      status: OK

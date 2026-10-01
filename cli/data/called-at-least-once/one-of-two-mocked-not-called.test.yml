@@ -1,0 +1,19 @@
+kind: Test
+version: 1.0.0
+name: one-of-two-mocked-not-called
+description: two mocked services are called at least once (calls count is not specified)
+spec:
+  request:
+    http:
+      method: GET
+      url: http://127.0.0.1:8082/healthz
+
+  expect:
+    http:
+      status: 200
+
+    calls:
+      - service_id: not-called
+        http:
+          method: GET
+          path: /healthz

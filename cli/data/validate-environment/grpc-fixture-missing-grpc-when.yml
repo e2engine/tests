@@ -1,0 +1,22 @@
+kind: Environment
+version: 1.0.0
+name: grpc-fixture-missing-grpc-when
+
+spec:
+  services:
+    - id: service
+      kind: grpc
+      mode: mocked
+      address: 127.0.0.1:8081
+      proto:
+        internal:
+          package: test.v1
+          service: TestService
+          methods:
+            - name: Test
+
+      fixtures:
+        - when: {}
+          then:
+            grpc:
+              status: OK

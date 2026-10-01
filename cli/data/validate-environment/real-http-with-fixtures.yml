@@ -1,0 +1,20 @@
+kind: Environment
+version: 1.0.0
+name: real-http-with-fixtures
+
+spec:
+  services:
+    - id: service
+      kind: http
+      mode: real
+      address: 127.0.0.1:8081
+      http_target: http://127.0.0.1:9001
+
+      fixtures:
+        - when:
+            http:
+              method: GET
+              path: /healthz
+          then:
+            http:
+              status: 200

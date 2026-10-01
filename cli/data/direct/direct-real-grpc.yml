@@ -1,0 +1,45 @@
+id: f5497dfbbf8392b4828f5323c07e4b5cc8026790caca7b3065350413bebbd4e3
+started_at: 2026-08-19T15:16:47.974744Z
+finished_at: 2026-08-19T15:16:47.993394Z
+status: passed
+environment_id: 7398ab887149ec5aa583c564a659a0b0a933ef27bacb675b081a2a752d8a3896
+environment_name: direct-real-grpc
+test_id: ae619f9418f89041a5f6e0e952eae9fb9495e2c271b66739ffd6fae46f9ff30a
+test_name: direct-real-grpc
+summary:
+  request:
+    grpc:
+      service: ok.v1.OKService
+      service_id: direct-real-grpc
+      method: OK
+  response:
+    grpc:
+      status: OK
+      metadata:
+        "content-type":
+          - "application/grpc"
+  expect:
+    grpc:
+      status: OK
+    calls:
+      - service_id: direct-real-grpc
+        grpc:
+          service: ok.v1.OKService
+          method: OK
+  calls:
+    - service_id: direct-real-grpc
+      grpc:
+        request:
+          rpc: /ok.v1.OKService/OK
+          metadata:
+            ":authority":
+              - "127.0.0.1:8083"
+            "content-type":
+              - "application/grpc"
+            "user-agent":
+              - "grpc-go/1.84.0"
+        response:
+          status: OK
+          metadata:
+            "content-type":
+              - "application/grpc+proto"

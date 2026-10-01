@@ -1,0 +1,20 @@
+kind: Environment
+version: 1.0.0
+name: grpc-proto-neither-external-nor-internal
+
+spec:
+  services:
+    - id: grpc-service
+      kind: grpc
+      mode: mocked
+      address: 127.0.0.1:8083
+
+      proto: {}
+
+      fixtures:
+        - when:
+            grpc:
+              method: OK
+          then:
+            grpc:
+              status: OK

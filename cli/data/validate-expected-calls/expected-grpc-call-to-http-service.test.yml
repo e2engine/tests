@@ -1,0 +1,20 @@
+kind: Test
+version: 1.0.0
+name: expected-grpc-call-to-http-service
+description: gRPC call expectation references an HTTP environment service
+
+spec:
+  request:
+    http:
+      method: GET
+      url: http://127.0.0.1:8082/healthz
+
+  expect:
+    http:
+      status: 200
+
+    calls:
+      - service_id: http-dependency
+        grpc:
+          service: example.Dependency
+          method: Check

@@ -1,0 +1,15 @@
+kind: Test
+version: 1.0.0
+name: grpc-request-invalid-target
+
+spec:
+  request:
+    grpc:
+      target: not-an-address
+      service: example.Service
+      method: Check
+      message: {}
+
+  expect:
+    grpc:
+      status: OK

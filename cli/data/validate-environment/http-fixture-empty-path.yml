@@ -1,0 +1,19 @@
+kind: Environment
+version: 1.0.0
+name: http-fixture-empty-path
+
+spec:
+  services:
+    - id: service
+      kind: http
+      mode: mocked
+      address: 127.0.0.1:8081
+
+      fixtures:
+        - when:
+            http:
+              method: GET
+              path: ""
+          then:
+            http:
+              status: 200

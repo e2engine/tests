@@ -1,0 +1,29 @@
+kind: Environment
+version: 1.0.0
+name: http-fixture-on-grpc-service
+
+spec:
+  services:
+    - id: service
+      kind: grpc
+      mode: mocked
+      address: 127.0.0.1:8081
+      proto:
+        internal:
+          package: test.v1
+          service: TestService
+          methods:
+            - name: Test
+
+      fixtures:
+        - when:
+            grpc:
+              method: Check
+            http:
+              method: GET
+              path: /healthz
+          then:
+            grpc:
+              status: OK
+            http:
+              status: 200

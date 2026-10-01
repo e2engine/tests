@@ -1,0 +1,22 @@
+id: f5497dfbbf8392b4828f5323c07e4b5cc8026790caca7b3065350413bebbd4e3
+started_at: 2026-08-19T15:16:47.974744Z
+finished_at: 2026-08-19T15:16:47.993394Z
+status: error
+environment_id: 7398ab887149ec5aa583c564a659a0b0a933ef27bacb675b081a2a752d8a3896
+environment_name: expected-http-call-to-grpc-service
+test_id: ae619f9418f89041a5f6e0e952eae9fb9495e2c271b66739ffd6fae46f9ff30a
+test_name: expected-http-call-to-grpc-service
+summary:
+  error: "invalid test execution input, environment.service.id: grpc-dependency, environment.service.kind: grpc, validation: expected HTTP call references non-HTTP service"
+  request:
+    http:
+      method: GET
+      url: http://127.0.0.1:8082/healthz
+  expect:
+    http:
+      status_code: 200
+    calls:
+      - service_id: grpc-dependency
+        http:
+          method: GET
+          path: /healthz

@@ -1,0 +1,18 @@
+kind: Test
+version: 1.0.0
+name: unknown-service-in-expected-calls
+description: has incorrect expected calls
+spec:
+  request:
+    http:
+      method: GET
+      url: http://127.0.0.1:8083/healthz
+  expect:
+    http:
+      status: 200
+    calls:
+      - service_id: not-called
+        count: 1
+        http:
+          method: GET
+          path: /healthz

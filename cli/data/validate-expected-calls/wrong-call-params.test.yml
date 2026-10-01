@@ -1,0 +1,18 @@
+kind: Test
+version: 1.0.0
+name: wrong-call-params
+description: wrong-call-params service is called with wrong parameters
+spec:
+  request:
+    http:
+      method: GET
+      url: http://127.0.0.1:8083/healthz
+  expect:
+    http:
+      status: 201
+    calls:
+      - service_id: wrong-call-params
+        count: 1
+        http:
+          method: POST
+          path: /healthz

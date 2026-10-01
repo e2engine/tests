@@ -1,0 +1,18 @@
+kind: Test
+version: 1.0.0
+name: real-not-calling-dependency
+description: checks that ok endpoint returns 200 OK and dependency service dependency endpoint is called once
+spec:
+  request:
+    http:
+      method: GET
+      url: http://127.0.0.1:8082/ok
+  expect:
+    http:
+      status: 200
+    calls:
+      - service_id: dependency
+        count: 1
+        http:
+          method: GET
+          path: /dependency

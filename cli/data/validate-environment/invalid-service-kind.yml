@@ -1,0 +1,11 @@
+kind: Environment
+version: 1.0.0
+name: invalid-service-kind
+
+spec:
+  services:
+    - id: service
+      kind: websocket
+      mode: real
+      address: 127.0.0.1:8081
+      target: 127.0.0.1:9001

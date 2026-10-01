@@ -1,0 +1,17 @@
+kind: Test
+version: 1.0.0
+name: duplicate-tag
+
+spec:
+  tags:
+    - tag
+    - tag
+
+  request:
+    http:
+      method: GET
+      url: http://localhost/test
+
+  expect:
+    http:
+      status: 200

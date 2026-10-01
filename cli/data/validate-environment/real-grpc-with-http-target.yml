@@ -1,0 +1,16 @@
+kind: Environment
+version: 1.0.0
+name: real-grpc-with-http-target
+
+spec:
+  services:
+    - id: service
+      kind: grpc
+      mode: real
+      address: 127.0.0.1:8081
+      http_target: http://127.0.0.1:8082
+      grpc_target: 127.0.0.1:8083
+      proto:
+        external:
+          file: service.proto
+          service: Service

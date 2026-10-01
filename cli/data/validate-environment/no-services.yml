@@ -1,0 +1,6 @@
+kind: Environment
+version: 1.0.0
+name: no-services
+description: environment with no services
+spec:
+  services:

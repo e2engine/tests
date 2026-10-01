@@ -1,0 +1,15 @@
+kind: TestSuite
+version: 1.0.0
+name: all-selectors
+
+spec:
+  selectors:
+    ids:
+      - abc
+      - def
+    names:
+      - healthz
+      - checkout
+    tags:
+      - smoke
+      - payments

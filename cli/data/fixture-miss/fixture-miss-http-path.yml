@@ -1,0 +1,88 @@
+id: f5497dfbbf8392b4828f5323c07e4b5cc8026790caca7b3065350413bebbd4e3
+started_at: 2026-08-19T15:16:47.974744Z
+finished_at: 2026-08-19T15:16:47.993394Z
+status: failed
+environment_id: 7398ab887149ec5aa583c564a659a0b0a933ef27bacb675b081a2a752d8a3896
+environment_name: fixture-miss-http-path
+test_id: ae619f9418f89041a5f6e0e952eae9fb9495e2c271b66739ffd6fae46f9ff30a
+test_name: fixture-miss-http-path
+summary:
+  request:
+    http:
+      method: GET
+      url: http://127.0.0.1:8082/check
+  response:
+      http:
+        status_code: 502
+        body_text: dependency returned non-200 status
+  expect:
+    http:
+      status_code: 200
+      body_json: '{"status":"ok"}'
+    calls:
+      - service_id: entitlements
+        count: 1
+        http:
+          method: GET
+          path: /healthz
+  calls:
+    - service_id: entitlements
+      http:
+        request:
+          method: GET
+          path: /healthz
+          headers:
+            Accept-Encoding:
+              - gzip
+            User-Agent:
+              - Go-http-client/1.1
+        response:
+          status_code: 501
+          headers:
+            Content-Length:
+              - "19"
+            Content-Type:
+              - text/plain; charset=utf-8
+            Date:
+              - Wed, 19 Aug 2026 15:16:47 GMT
+            X-Content-Type-Options:
+              - nosniff
+            X-E2engine-Mock-Miss:
+              - true
+          body_json: no fixture matched
+    - service_id: gateway
+      http:
+        request:
+          method: GET
+          path: /check
+          headers:
+            Accept-Encoding:
+              - gzip
+            User-Agent:
+              - Go-http-client/1.1
+        response:
+          status_code: 502
+          headers:
+            Content-Length:
+              - "35"
+            Content-Type:
+              - text/plain; charset=utf-8
+            Date:
+              - Wed, 19 Aug 2026 15:16:47 GMT
+            X-Content-Type-Options:
+              - nosniff
+          body_json: dependency returned non-200 status
+  deviations:
+    - field: status_code
+      expected: "200"
+      actual: "502"
+
+    - field: body
+      expected: '{"status":"ok"}'
+      actual: |
+        dependency returned non-200 status
+      message: response body is not valid JSON
+
+    - field: calls.entitlements
+      actual: GET /healthz
+      message: mocked service received a request that did not match any fixture

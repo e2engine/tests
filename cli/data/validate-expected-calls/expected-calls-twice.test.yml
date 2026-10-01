@@ -1,0 +1,18 @@
+kind: Test
+version: 1.0.0
+name: expected-calls-twice
+description: expected-calls-twice service is called twice
+spec:
+  request:
+    http:
+      method: GET
+      url: http://127.0.0.1:8083/healthz
+  expect:
+    http:
+      status: 200
+    calls:
+      - service_id: expected-calls-twice
+        count: 2
+        http:
+          method: GET
+          path: /healthz

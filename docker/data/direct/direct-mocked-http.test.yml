@@ -1,0 +1,17 @@
+kind: Test
+version: 1.0.0
+name: direct-mocked-http
+description: direct-mocked-http service is called at least once (calls count is not specified)
+spec:
+  request:
+    http:
+      method: GET
+      url: http://127.0.0.1:8083/healthz
+  expect:
+    http:
+      status: 200
+    calls:
+      - service_id: direct-mocked-http
+        http:
+          method: GET
+          path: /healthz

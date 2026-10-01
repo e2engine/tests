@@ -1,0 +1,20 @@
+kind: Test
+version: 1.0.0
+name: socket-grpc-error
+description: socket-grpc-error service producing a gRPC error due to missing proto file
+
+spec:
+  request:
+    grpc:
+      target: 127.0.0.1:8083
+      service: ok.v1.OKService
+      method: OK
+
+  expect:
+    grpc:
+      status: OK
+    calls:
+      - service_id: socket-grpc-error
+        grpc:
+          service: ok.v1.OKService
+          method: OK

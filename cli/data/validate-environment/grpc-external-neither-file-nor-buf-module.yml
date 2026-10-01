@@ -1,0 +1,14 @@
+kind: Environment
+version: 1.0.0
+name: grpc-external-neither-file-nor-buf-module
+
+spec:
+  services:
+    - id: grpc-service
+      kind: grpc
+      mode: real
+      address: 127.0.0.1:8083
+
+      proto:
+        external:
+          service: ok.v1.OKService

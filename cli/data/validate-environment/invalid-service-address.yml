@@ -1,0 +1,11 @@
+kind: Environment
+version: 1.0.0
+name: invalid-service-address
+
+spec:
+  services:
+    - id: service
+      kind: http
+      mode: real
+      address: not-an-address
+      target: 127.0.0.1:9001

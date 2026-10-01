@@ -1,0 +1,10 @@
+kind: TestSuite
+version: 1.0.0
+name: names-and-tags
+
+spec:
+  selectors:
+    names:
+      - healthz
+    tags:
+      - smoke

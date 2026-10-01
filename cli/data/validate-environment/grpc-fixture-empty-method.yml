@@ -1,0 +1,25 @@
+kind: Environment
+version: 1.0.0
+name: grpc-fixture-empty-method
+
+spec:
+  services:
+    - id: service
+      kind: grpc
+      mode: mocked
+      address: 127.0.0.1:8081
+      proto:
+        internal:
+          package: test
+          service: Service
+          methods:
+            - name: Call
+              request: {}
+              response: {}
+      fixtures:
+        - when:
+            grpc:
+              method: ""
+          then:
+            grpc:
+              status: OK

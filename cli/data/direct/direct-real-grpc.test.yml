@@ -1,0 +1,20 @@
+kind: Test
+version: 1.0.0
+name: direct-real-grpc
+description: direct-real-grpc service is called at least once (calls count is not specified)
+
+spec:
+  request:
+    grpc:
+      target: 127.0.0.1:8083
+      service: ok.v1.OKService
+      method: OK
+
+  expect:
+    grpc:
+      status: OK
+    calls:
+      - service_id: direct-real-grpc
+        grpc:
+          service: ok.v1.OKService
+          method: OK

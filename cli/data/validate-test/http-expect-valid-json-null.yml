@@ -1,0 +1,14 @@
+kind: Test
+version: 1.0.0
+name: http-expect-valid-json-null
+
+spec:
+  request:
+    http:
+      method: GET
+      url: http://127.0.0.1:8080/value
+
+  expect:
+    http:
+      status: 200
+      body: 'null'

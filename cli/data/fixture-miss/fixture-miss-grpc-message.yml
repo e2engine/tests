@@ -1,0 +1,105 @@
+id: f5497dfbbf8392b4828f5323c07e4b5cc8026790caca7b3065350413bebbd4e3
+started_at: 2026-08-19T15:16:47.974744Z
+finished_at: 2026-08-19T15:16:47.993394Z
+status: failed
+environment_id: 7398ab887149ec5aa583c564a659a0b0a933ef27bacb675b081a2a752d8a3896
+environment_name: fixture-miss-grpc-message
+test_id: ae619f9418f89041a5f6e0e952eae9fb9495e2c271b66739ffd6fae46f9ff30a
+test_name: fixture-miss-grpc-message
+summary:
+  request:
+    http:
+      method: GET
+      url: http://127.0.0.1:8082/check
+
+  response:
+    http:
+      status_code: 502
+      body_text: dependency returned non-ok status
+
+  expect:
+    http:
+      status_code: 200
+      body_json: '{"status":"ok"}'
+
+    calls:
+      - service_id: entitlements
+        count: 1
+        grpc:
+          service: entitlements.v1.EntitlementsService
+          method: CheckEntitlement
+          message:
+            customer_id: customer-2
+
+  calls:
+    - service_id: entitlements
+      grpc:
+        request:
+          rpc: /entitlements.v1.EntitlementsService/CheckEntitlement
+          metadata:
+            ":authority":
+              - "127.0.0.1:8083"
+            "content-type":
+              - "application/grpc"
+            "user-agent":
+              - "grpc-go/1.84.0"
+          message:
+            - 10
+            - 10
+            - 99
+            - 117
+            - 115
+            - 116
+            - 111
+            - 109
+            - 101
+            - 114
+            - 45
+            - 50
+
+        response:
+          status: Unimplemented
+          metadata:
+            content-type:
+              - "application/grpc+proto"
+            x-e2engine-mock-miss:
+              - "true"
+
+    - service_id: gateway
+      http:
+        request:
+          method: GET
+          path: /check
+          headers:
+            Accept-Encoding:
+              - gzip
+            User-Agent:
+              - Go-http-client/1.1
+
+        response:
+          status_code: 502
+          headers:
+            Content-Length:
+              - "34"
+            Content-Type:
+              - text/plain; charset=utf-8
+            Date:
+              - Wed, 19 Aug 2026 15:16:47 GMT
+            X-Content-Type-Options:
+              - nosniff
+          body_json: dependency returned non-ok status
+
+  deviations:
+    - field: status_code
+      expected: "200"
+      actual: "502"
+
+    - field: body
+      expected: '{"status":"ok"}'
+      actual: |
+        dependency returned non-ok status
+      message: response body is not valid JSON
+
+    - field: calls.entitlements
+      actual: /entitlements.v1.EntitlementsService/CheckEntitlement
+      message: mocked service received a request that did not match any fixture

@@ -1,0 +1,30 @@
+kind: Environment
+version: 1.0.0
+name: grpc-proto-both-external-and-internal
+
+spec:
+  services:
+    - id: grpc-service
+      kind: grpc
+      mode: mocked
+      address: 127.0.0.1:8083
+
+      proto:
+        external:
+          file: services/ok-grpc/ok.proto
+          service: ok.v1.OKService
+        internal:
+          package: ok.v1
+          service: OKService
+          methods:
+            - name: OK
+              request: {}
+              response: {}
+
+      fixtures:
+        - when:
+            grpc:
+              method: OK
+          then:
+            grpc:
+              status: OK

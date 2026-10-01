@@ -1,0 +1,14 @@
+kind: Environment
+version: 1.0.0
+name: http-with-proto
+
+spec:
+  services:
+    - id: service
+      kind: http
+      mode: real
+      address: 127.0.0.1:8081
+      target: 127.0.0.1:9001
+      proto:
+        buf_module: example
+        service: example.Service

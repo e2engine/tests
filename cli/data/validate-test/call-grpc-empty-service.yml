@@ -1,0 +1,21 @@
+kind: Test
+version: 1.0.0
+name: call-grpc-empty-service
+
+spec:
+  request:
+    grpc:
+      target: 127.0.0.1:9090
+      service: example.Service
+      method: Check
+      message: {}
+
+  expect:
+    grpc:
+      status: OK
+
+    calls:
+      - service_id: dependency
+        grpc:
+          service: ""
+          method: Check

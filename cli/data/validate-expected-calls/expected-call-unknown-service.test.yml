@@ -1,0 +1,20 @@
+kind: Test
+version: 1.0.0
+name: expected-call-unknown-service
+description: expected call references a service absent from the environment
+
+spec:
+  request:
+    http:
+      method: GET
+      url: http://127.0.0.1:8082/healthz
+
+  expect:
+    http:
+      status: 200
+
+    calls:
+      - service_id: missing-service
+        http:
+          method: GET
+          path: /healthz

@@ -1,0 +1,13 @@
+kind: Test
+version: 1.0.0
+name: http-request-invalid-url
+
+spec:
+  request:
+    http:
+      method: GET
+      url: "http://[::1"
+
+  expect:
+    http:
+      status: 200

@@ -1,0 +1,15 @@
+kind: Test
+version: 1.0.0
+name: grpc-expect-empty-status
+
+spec:
+  request:
+    grpc:
+      target: 127.0.0.1:9090
+      service: example.Service
+      method: Check
+      message: {}
+
+  expect:
+    grpc:
+      status: ""

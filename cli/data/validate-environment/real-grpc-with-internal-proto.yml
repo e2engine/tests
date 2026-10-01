@@ -1,0 +1,19 @@
+kind: Environment
+version: 1.0.0
+name: real-grpc-with-internal-proto
+
+spec:
+  services:
+    - id: grpc-service
+      kind: grpc
+      mode: real
+      address: 127.0.0.1:8083
+
+      proto:
+        internal:
+          package: ok.v1
+          service: OKService
+          methods:
+            - name: OK
+              request: {}
+              response: {}

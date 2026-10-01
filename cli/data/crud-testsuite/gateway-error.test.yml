@@ -1,0 +1,15 @@
+kind: Test
+version: 1.0.0
+name: gateway-error
+description: calls gateway error endpoint and verifies the response is ok
+spec:
+  tags:
+    - e2e
+  request:
+    http:
+      method: GET
+      url: http://127.0.0.1:8082/error
+  expect:
+    http:
+      status: 200
+      body: '{"status":"ok"}'

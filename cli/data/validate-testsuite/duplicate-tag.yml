@@ -1,0 +1,9 @@
+kind: TestSuite
+version: 1.0.0
+name: duplicate-tag
+
+spec:
+  selectors:
+    tags:
+      - tag
+      - tag

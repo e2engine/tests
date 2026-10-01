@@ -1,0 +1,12 @@
+kind: Environment
+version: 1.0.0
+name: real-http-with-grpc-target
+
+spec:
+  services:
+    - id: service
+      kind: http
+      mode: real
+      address: 127.0.0.1:8081
+      http_target: http://127.0.0.1:8082
+      grpc_target: 127.0.0.1:8083

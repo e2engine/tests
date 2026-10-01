@@ -1,0 +1,10 @@
+kind: Environment
+version: 1.0.0
+name: grpc-without-proto
+
+spec:
+  services:
+    - id: service
+      kind: grpc
+      mode: real
+      address: 127.0.0.1:8081

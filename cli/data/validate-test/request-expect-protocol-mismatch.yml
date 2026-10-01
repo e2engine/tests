@@ -1,0 +1,13 @@
+kind: Test
+version: 1.0.0
+name: request-expect-protocol-mismatch
+
+spec:
+  request:
+    http:
+      method: GET
+      url: http://127.0.0.1:8080/healthz
+
+  expect:
+    grpc:
+      status: OK

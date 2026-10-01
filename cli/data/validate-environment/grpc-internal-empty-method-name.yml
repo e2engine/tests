@@ -1,0 +1,25 @@
+kind: Environment
+version: 1.0.0
+name: grpc-internal-empty-method-name
+
+spec:
+  services:
+    - id: service
+      kind: grpc
+      mode: mocked
+      address: 127.0.0.1:8081
+      proto:
+        internal:
+          package: test
+          service: Service
+          methods:
+            - name: ""
+              request: {}
+              response: {}
+      fixtures:
+        - when:
+            grpc:
+              method: Call
+          then:
+            grpc:
+              status: OK

@@ -1,0 +1,16 @@
+kind: Test
+version: 1.0.0
+name: grpc-expect-message-valid
+
+spec:
+  request:
+    grpc:
+      target: 127.0.0.1:8081
+      service: TestService
+      method: Test
+
+  expect:
+    grpc:
+      status: OK
+      message:
+        value: test

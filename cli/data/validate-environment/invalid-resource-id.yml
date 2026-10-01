@@ -1,0 +1,7 @@
+kind: Environment
+id: invalid
+version: 1.0.0
+name: environment
+
+spec:
+  services: []

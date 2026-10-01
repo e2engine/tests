@@ -1,0 +1,10 @@
+kind: TestSuite
+version: 1.0.0
+name: ids-and-names
+
+spec:
+  selectors:
+    ids:
+      - abc
+    names:
+      - healthz

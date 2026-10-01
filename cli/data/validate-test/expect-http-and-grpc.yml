@@ -1,0 +1,15 @@
+kind: Test
+version: 1.0.0
+name: expect-http-and-grpc
+
+spec:
+  request:
+    http:
+      method: GET
+      url: http://127.0.0.1:8080/healthz
+
+  expect:
+    http:
+      status: 200
+    grpc:
+      status: OK

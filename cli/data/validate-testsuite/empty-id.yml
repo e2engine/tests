@@ -1,0 +1,8 @@
+kind: TestSuite
+version: 1.0.0
+name: empty-id
+
+spec:
+  selectors:
+    ids:
+      - ""

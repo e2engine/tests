@@ -1,0 +1,28 @@
+{
+  "kind": "test",
+  "version": "1.0.0",
+  "name": "direct-real-http",
+  "description": "direct-real-http service is called at least once (calls count is not specified)",
+  "spec": {
+    "request": {
+      "http": {
+        "method": "GET",
+        "url": "http://127.0.0.1:8083/ok"
+      }
+    },
+    "expect": {
+      "http": {
+        "status": 200
+      },
+      "calls": [
+        {
+          "service_id": "direct-real-http",
+          "http": {
+            "method": "GET",
+            "path": "/ok"
+          }
+        }
+      ]
+    }
+  }
+}

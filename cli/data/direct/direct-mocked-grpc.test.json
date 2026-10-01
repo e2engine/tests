@@ -1,0 +1,35 @@
+{
+  "kind": "test",
+  "version": "1.0.0",
+  "name": "direct-mocked-grpc",
+  "description": "direct-mocked-grpc service is called at least once (calls count is not specified)",
+  "spec": {
+    "request": {
+      "grpc": {
+        "target": "127.0.0.1:8083",
+        "service": "entitlements.v1.EntitlementsService",
+        "method": "CheckEntitlement",
+        "message": {
+          "customer_id": "customer-1"
+        }
+      }
+    },
+    "expect": {
+      "grpc": {
+        "status": "OK"
+      },
+      "calls": [
+        {
+          "service_id": "direct-mocked-grpc",
+          "grpc": {
+            "service": "entitlements.v1.EntitlementsService",
+            "method": "CheckEntitlement",
+            "message": {
+              "customer_id": "customer-1"
+            }
+          }
+        }
+      ]
+    }
+  }
+}

@@ -1,0 +1,14 @@
+kind: Test
+version: 1.0.0
+name: http-request-invalid-json
+
+spec:
+  request:
+    http:
+      method: POST
+      url: http://127.0.0.1:8080/check
+      body: '{"broken":'
+
+  expect:
+    http:
+      status: 200

@@ -1,0 +1,13 @@
+syntax = "proto3";
+
+package ok.v1;
+
+option go_package = "github.com/e2engine/tests/services/ok-grpc/okv1";
+
+service OKService {
+  rpc OK(OKRequest) returns (OKResponse);
+}
+
+message OKRequest {}
+
+message OKResponse {}

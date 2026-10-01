@@ -1,0 +1,13 @@
+kind: Test
+version: 1.0.0
+name: http-request-no-host
+
+spec:
+  request:
+    http:
+      method: GET
+      url: http:/healthz
+
+  expect:
+    http:
+      status: 200

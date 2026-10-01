@@ -1,0 +1,28 @@
+kind: Environment
+version: 1.0.0
+name: grpc-internal-invalid-field-type
+
+spec:
+  services:
+    - id: service
+      kind: grpc
+      mode: mocked
+      address: 127.0.0.1:8081
+      proto:
+        internal:
+          package: test
+          service: Service
+          methods:
+            - name: Call
+              request:
+                fields:
+                  - name: value
+                    type: invalid
+              response: {}
+      fixtures:
+        - when:
+            grpc:
+              method: Call
+          then:
+            grpc:
+              status: OK

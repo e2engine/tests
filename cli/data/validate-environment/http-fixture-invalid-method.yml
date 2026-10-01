@@ -1,0 +1,19 @@
+kind: Environment
+version: 1.0.0
+name: http-fixture-invalid-method
+
+spec:
+  services:
+    - id: service
+      kind: http
+      mode: mocked
+      address: 127.0.0.1:8081
+
+      fixtures:
+        - when:
+            http:
+              method: CONNECT
+              path: /healthz
+          then:
+            http:
+              status: 200

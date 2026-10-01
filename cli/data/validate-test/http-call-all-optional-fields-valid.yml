@@ -1,0 +1,26 @@
+kind: Test
+version: 1.0.0
+name: http-call-all-optional-fields-valid
+
+spec:
+  request:
+    http:
+      method: GET
+      url: http://localhost/test
+
+  expect:
+    http:
+      status: 200
+    calls:
+      - service_id: dependency
+        count: 1
+        http:
+          method: POST
+          path: /call
+          query:
+            key:
+              - value
+          headers:
+            Content-Type:
+              - application/json
+          body: '{"value":"test"}'

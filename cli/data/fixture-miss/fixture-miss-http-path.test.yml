@@ -1,0 +1,22 @@
+kind: Test
+version: 1.0.0
+name: fixture-miss-http-path
+description: checks gateway response and verifies the mocked entitlements call
+spec:
+  tags:
+    - e2e
+    - routing
+  request:
+    http:
+      method: GET
+      url: http://127.0.0.1:8082/check
+  expect:
+    http:
+      status: 200
+      body: '{"status":"ok"}'
+    calls:
+      - service_id: entitlements
+        count: 1
+        http:
+          method: GET
+          path: /healthz

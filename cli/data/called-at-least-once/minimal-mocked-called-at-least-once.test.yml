@@ -1,0 +1,17 @@
+kind: Test
+version: 1.0.0
+name: minimal-mocked-called-at-least-once
+description: minimal-mocked service is called at least once (calls count is not specified)
+spec:
+  request:
+    http:
+      method: GET
+      url: http://127.0.0.1:8083/healthz
+  expect:
+    http:
+      status: 200
+    calls:
+      - service_id: minimal-mocked-called-at-least-once
+        http:
+          method: GET
+          path: /healthz

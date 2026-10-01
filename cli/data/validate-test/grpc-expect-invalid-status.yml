@@ -1,0 +1,14 @@
+kind: Test
+version: 1.0.0
+name: grpc-expect-invalid-status
+
+spec:
+  request:
+    grpc:
+      target: 127.0.0.1:8081
+      service: TestService
+      method: Test
+
+  expect:
+    grpc:
+      status: InvalidStatus

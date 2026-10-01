@@ -1,0 +1,20 @@
+id: f5497dfbbf8392b4828f5323c07e4b5cc8026790caca7b3065350413bebbd4e3
+started_at: 2026-08-19T15:16:47.974744Z
+finished_at: 2026-08-19T15:16:47.993394Z
+status: error
+environment_id: 7398ab887149ec5aa583c564a659a0b0a933ef27bacb675b081a2a752d8a3896
+environment_name: socket-grpc-error
+test_id: ae619f9418f89041a5f6e0e952eae9fb9495e2c271b66739ffd6fae46f9ff30a
+test_name: socket-grpc-error
+summary:
+  error: "the specified path is inaccessible, file.path: ../services/ok-grpc/missing.proto, cause: stat ../services/ok-grpc/missing.proto: no such file or directory"
+  request:
+    grpc:
+      target: 127.0.0.1:8083
+      service: ok.v1.OKService
+      method: OK
+  expect:
+    grpc:
+      status: OK
+    calls:
+      - service_id: socket-grpc-error

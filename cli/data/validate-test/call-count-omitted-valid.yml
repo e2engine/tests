@@ -1,0 +1,19 @@
+kind: Test
+version: 1.0.0
+name: call-count-omitted-valid
+
+spec:
+  request:
+    http:
+      method: GET
+      url: http://127.0.0.1:8082/healthz
+
+  expect:
+    http:
+      status: 200
+
+    calls:
+      - service_id: dependency
+        http:
+          method: GET
+          path: /healthz

@@ -1,0 +1,25 @@
+kind: Test
+version: 1.0.0
+name: call-http-and-grpc
+
+spec:
+  request:
+    http:
+      method: GET
+      url: http://127.0.0.1:8080/check
+
+  expect:
+    http:
+      status: 200
+
+    calls:
+      - service_id: dependency
+        count: 1
+
+        http:
+          method: GET
+          path: /healthz
+
+        grpc:
+          service: example.Service
+          method: Check

@@ -1,0 +1,11 @@
+kind: Environment
+version: 1.0.0
+name: invalid-grpc-target
+
+spec:
+  services:
+    - id: service
+      kind: grpc
+      mode: real
+      address: 127.0.0.1:8081
+      grpc_target: invalid
