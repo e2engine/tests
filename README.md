@@ -69,12 +69,12 @@ The test targets build the binaries and Docker images required by their respecti
 
 This repository is part of E2Engine.
 
-- core — core domain model, execution logic, and public APIs
-- repository — persistence implementations
-- runner-local — local test execution
-- cli — command-line interface
-- tests — end-to-end tests for E2Engine
-- demo — executable demonstration system and E2Engine examples
+- [core](https://github.com/e2engine/core) — core domain model, execution logic, and public APIs
+- [repository](https://github.com/e2engine/repository) — persistence implementations
+- [runner-local](https://github.com/e2engine/runner-local) — local test execution
+- [cli](https://github.com/e2engine/cli) — command-line interface
+- [tests](https://github.com/e2engine/tests) — end-to-end tests for E2Engine
+- demo — executable demonstration system and E2Engine usage examples
 
 ## License
 
