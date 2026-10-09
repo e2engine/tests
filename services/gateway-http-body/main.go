@@ -5,9 +5,15 @@ import (
 	"io"
 	"log"
 	"net/http"
+
+	e2enginehttp "github.com/e2engine/instrumentation-go/http"
 )
 
 func main() {
+	client := &http.Client{
+		Transport: e2enginehttp.Transport(),
+	}
+
 	http.HandleFunc("/check", func(w http.ResponseWriter, r *http.Request) {
 		req, err := http.NewRequestWithContext(
 			r.Context(),
@@ -20,13 +26,7 @@ func main() {
 			return
 		}
 
-		const testExecutionIDHeader = "E2Engine-Test-Execution-ID"
-		req.Header.Set(
-			testExecutionIDHeader,
-			r.Header.Get(testExecutionIDHeader),
-		)
-
-		resp, err := http.DefaultClient.Do(req)
+		resp, err := client.Do(req)
 		if err != nil {
 			http.Error(w, "dependency request failed", http.StatusBadGateway)
 			return
@@ -50,7 +50,10 @@ func main() {
 		_, _ = w.Write(body)
 	})
 
-	if err := http.ListenAndServe("127.0.0.1:9000", nil); err != nil {
+	if err := http.ListenAndServe(
+		"127.0.0.1:9000",
+		e2enginehttp.Handler(),
+	); err != nil {
 		log.Fatal(err)
 	}
 }

@@ -4,9 +4,10 @@ import (
 	"log"
 	"net/http"
 
+	e2enginegrpc "github.com/e2engine/instrumentation-go/grpc"
+	e2enginehttp "github.com/e2engine/instrumentation-go/http"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials/insecure"
-	"google.golang.org/grpc/metadata"
 	"google.golang.org/protobuf/proto"
 	"google.golang.org/protobuf/reflect/protodesc"
 	"google.golang.org/protobuf/reflect/protoreflect"
@@ -26,6 +27,9 @@ func main() {
 		connection, err := grpc.NewClient(
 			entitlementsAddress,
 			grpc.WithTransportCredentials(insecure.NewCredentials()),
+			grpc.WithUnaryInterceptor(
+				e2enginegrpc.UnaryClientInterceptor(),
+			),
 		)
 		if err != nil {
 			http.Error(w, "dependency request failed", http.StatusBadGateway)
@@ -41,16 +45,8 @@ func main() {
 
 		response := dynamicpb.NewMessage(method.Output())
 
-		const testExecutionIDKey = "e2engine-test-execution-id"
-
-		callCtx := metadata.AppendToOutgoingContext(
-			r.Context(),
-			testExecutionIDKey,
-			r.Header.Get("E2Engine-Test-Execution-ID"),
-		)
-
 		if err := connection.Invoke(
-			callCtx,
+			r.Context(),
 			entitlementsRPC,
 			request,
 			response,
@@ -78,7 +74,10 @@ func main() {
 		_, _ = w.Write([]byte(`{"entitled":false}`))
 	})
 
-	if err := http.ListenAndServe("127.0.0.1:9000", nil); err != nil {
+	if err := http.ListenAndServe(
+		"127.0.0.1:9000",
+		e2enginehttp.Handler(),
+	); err != nil {
 		log.Fatal(err)
 	}
 }

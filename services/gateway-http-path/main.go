@@ -7,6 +7,8 @@ import (
 	"os"
 	"strconv"
 	"time"
+
+	e2enginehttp "github.com/e2engine/instrumentation-go/http"
 )
 
 func main() {
@@ -18,6 +20,10 @@ func main() {
 		if err != nil {
 			log.Fatalf("Invalid gateway http path argument: %v", err)
 		}
+	}
+
+	client := &http.Client{
+		Transport: e2enginehttp.Transport(),
 	}
 
 	http.HandleFunc("/check", func(w http.ResponseWriter, r *http.Request) {
@@ -38,7 +44,7 @@ func main() {
 			r.Header.Get(testExecutionIDHeader),
 		)
 
-		resp, err := http.DefaultClient.Do(req)
+		resp, err := client.Do(req)
 		if err != nil {
 			http.Error(w, "dependency request failed", http.StatusBadGateway)
 			return
