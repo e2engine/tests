@@ -77,7 +77,18 @@ Changes are promoted in the following order:
 
 1. Update dependencies and tests on `main`.
 2. Run the complete test repository CI and ensure it passes.
-3. Promote `main` to `stable`.
+3. Promote `main` to `stable`:
+
+```bash
+git switch main
+git pull --ff-only
+
+# after main CI is green
+git push origin main:stable
+```
+
+The `stable` branch must always point to a commit from main that has already passed CI; promotion should only fast-forward the branch and must not create new commits.
+
 4. Update downstream repositories that depend on the new versions.
 
 For example, when updating Core or instrumentation dependencies:
