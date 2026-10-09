@@ -2,6 +2,8 @@
 
 End-to-end test suite for E2Engine.
 
+Part of [E2Engine](https://e2engine.dev), an open-source platform for declarative end-to-end testing.
+
 This repository verifies E2Engine through its public interfaces using the CLI, Docker, real and mocked HTTP/gRPC services, direct and socket transports, persistence, and asynchronous execution flows.
 
 The CLI, Docker images, and helper service binaries required by the tests are built locally by the Makefile before the corresponding test suites run.
@@ -65,6 +67,33 @@ make verify
 
 The test targets build the binaries and Docker images required by their respective suites before running the tests.
 
+## Stable branch
+
+The `stable` branch provides a known-good version of the E2E test suite for downstream E2Engine repositories.
+
+Downstream CI, such as the CLI build, should use `stable` rather than `main`. This prevents changes under development in the test suite from unexpectedly breaking downstream builds.
+
+Changes are promoted in the following order:
+
+1. Update dependencies and tests on `main`.
+2. Run the complete test repository CI and ensure it passes.
+3. Promote `main` to `stable`.
+4. Update downstream repositories that depend on the new versions.
+
+For example, when updating Core or instrumentation dependencies:
+
+```text
+dependency release
+        ↓
+tests/main
+        ↓
+tests CI passes
+        ↓
+tests/stable
+        ↓
+downstream repository update
+```
+
 ## E2Engine
 
 This repository is part of E2Engine.
@@ -74,8 +103,9 @@ This repository is part of E2Engine.
 - [runner-local](https://github.com/e2engine/runner-local) — local test execution
 - [cli](https://github.com/e2engine/cli) — command-line interface
 - [tests](https://github.com/e2engine/tests) — end-to-end tests for E2Engine
-- demo — executable demonstration system and E2Engine usage examples
+- [demo](https://github.com/e2engine/demo) — executable demonstration system and E2Engine usage examples
+- [instrumentation-go](https://github.com/e2engine/instrumentation-go) — Go instrumentation library for E2Engine
 
 ## License
 
-Licensed under the Apache License, Version 2.0.
+Licensed under the Apache License, Version 2.0. See [LICENSE](LICENSE).
