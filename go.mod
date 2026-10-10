@@ -3,7 +3,7 @@ module github.com/e2engine/tests
 go 1.27
 
 require (
-	github.com/e2engine/core v0.1.2
+	github.com/e2engine/core v0.2.0
 	github.com/e2engine/instrumentation-go/grpc v0.1.1
 	github.com/e2engine/instrumentation-go/http v0.1.1
 	google.golang.org/grpc v1.84.0

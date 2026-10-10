@@ -75,29 +75,22 @@ func assertEqualTestExecutionSummary(
 	assertEqualTestExecutionRequestSummary(
 		t,
 		"Summary.Request",
-		&expected.Request,
-		&actual.Request,
+		expected.Request,
+		actual.Request,
 	)
 
 	assertEqualTestExecutionResponseSummary(
 		t,
 		"Summary.Response",
-		&expected.Response,
-		&actual.Response,
+		expected.Response,
+		actual.Response,
 	)
 
-	assertEqualTestExecutionExpectSummary(
+	assertEqualTestExecutionExpectedCallsSummary(
 		t,
-		"Summary.Expect",
-		&expected.Expect,
-		&actual.Expect,
-	)
-
-	assertEqualTestExecutionCalls(
-		t,
-		"Summary.Calls",
-		expected.Calls,
-		actual.Calls,
+		"Summary.ExpectedCalls",
+		expected.ExpectedCalls,
+		actual.ExpectedCalls,
 	)
 
 	assertEqualTestExecutionDeviations(
@@ -115,6 +108,18 @@ func assertEqualTestExecutionRequestSummary(
 	actual *model.TestExecutionRequestSummary,
 ) {
 	t.Helper()
+
+	if expected == nil && actual == nil {
+		return
+	}
+	if expected == nil {
+		t.Errorf("Expected %s nil, got %+v", path, actual)
+		return
+	}
+	if actual == nil {
+		t.Errorf("Expected %s %+v, got nil", path, expected)
+		return
+	}
 
 	switch {
 	case expected.HTTP != nil && actual.HTTP != nil:
@@ -194,6 +199,18 @@ func assertEqualTestExecutionResponseSummary(
 ) {
 	t.Helper()
 
+	if expected == nil && actual == nil {
+		return
+	}
+	if expected == nil {
+		t.Errorf("Expected %s nil, got %+v", path, actual)
+		return
+	}
+	if actual == nil {
+		t.Errorf("Expected %s %+v, got nil", path, expected)
+		return
+	}
+
 	switch {
 	case expected.HTTP != nil && actual.HTTP != nil:
 		assertEqualTestExecutionHTTPResponseSummary(
@@ -258,90 +275,32 @@ func assertEqualTestExecutionGRPCResponseSummary(
 	assertEqualJSONValue(t, path+".Message", expected.Message, actual.Message)
 }
 
-func assertEqualTestExecutionExpectSummary(
+func assertEqualTestExecutionExpectedCallsSummary(
 	t *testing.T,
 	path string,
 	expected,
-	actual *model.TestExecutionExpectSummary,
+	actual []model.TestExecutionCallExpectationSummary,
 ) {
 	t.Helper()
 
-	switch {
-	case expected.HTTP != nil && actual.HTTP != nil:
-		assertEqualTestExecutionHTTPExpectSummary(
-			t,
-			path+".HTTP",
-			expected.HTTP,
-			actual.HTTP,
-		)
-	case expected.HTTP != nil:
-		t.Errorf("Expected %s.HTTP %+v, got nil", path, expected.HTTP)
-	case actual.HTTP != nil:
-		t.Errorf("Expected %s.HTTP nil, got %+v", path, actual.HTTP)
-	}
-
-	switch {
-	case expected.GRPC != nil && actual.GRPC != nil:
-		assertEqualTestExecutionGRPCExpectSummary(
-			t,
-			path+".GRPC",
-			expected.GRPC,
-			actual.GRPC,
-		)
-	case expected.GRPC != nil:
-		t.Errorf("Expected %s.GRPC %+v, got nil", path, expected.GRPC)
-	case actual.GRPC != nil:
-		t.Errorf("Expected %s.GRPC nil, got %+v", path, actual.GRPC)
-	}
-
-	if len(expected.Calls) != len(actual.Calls) {
+	if len(expected) != len(actual) {
 		t.Errorf(
-			"Expected %s.Calls length %d, got %d",
+			"Expected %s length %d, got %d",
 			path,
-			len(expected.Calls),
-			len(actual.Calls),
+			len(expected),
+			len(actual),
 		)
 		return
 	}
 
-	for i := range expected.Calls {
+	for i := range expected {
 		assertEqualTestExecutionCallExpectationSummary(
 			t,
-			path+".Calls["+strconv.Itoa(i)+"]",
-			&expected.Calls[i],
-			&actual.Calls[i],
+			path+"["+strconv.Itoa(i)+"]",
+			&expected[i],
+			&actual[i],
 		)
 	}
-}
-
-func assertEqualTestExecutionHTTPExpectSummary(
-	t *testing.T,
-	path string,
-	expected,
-	actual *model.TestExecutionHTTPExpectSummary,
-) {
-	t.Helper()
-
-	if expected.StatusCode != actual.StatusCode {
-		t.Errorf("Expected %s.StatusCode %d, got %d", path, expected.StatusCode, actual.StatusCode)
-	}
-	if expected.BodyJSON != actual.BodyJSON {
-		t.Errorf("Expected %s.BodyJSON %q, got %q", path, expected.BodyJSON, actual.BodyJSON)
-	}
-}
-
-func assertEqualTestExecutionGRPCExpectSummary(
-	t *testing.T,
-	path string,
-	expected,
-	actual *model.TestExecutionGRPCExpectSummary,
-) {
-	t.Helper()
-
-	if expected.Status != actual.Status {
-		t.Errorf("Expected %s.Status %q, got %q", path, expected.Status, actual.Status)
-	}
-	assertEqualJSONValue(t, path+".Message", expected.Message, actual.Message)
 }
 
 func assertEqualTestExecutionCallExpectationSummary(
@@ -357,11 +316,19 @@ func assertEqualTestExecutionCallExpectationSummary(
 	}
 
 	assertEqualIntPointer(t, path+".Count", expected.Count, actual.Count)
+
 	assertEqualTestExecutionHTTPCallExpectationSummary(
 		t,
 		path+".HTTP",
 		expected.HTTP,
 		actual.HTTP,
+	)
+
+	assertEqualTestExecutionGRPCCallExpectationSummary(
+		t,
+		path+".GRPC",
+		expected.GRPC,
+		actual.GRPC,
 	)
 }
 
@@ -400,61 +367,11 @@ func assertEqualTestExecutionHTTPCallExpectationSummary(
 	}
 }
 
-func assertEqualTestExecutionCalls(
+func assertEqualTestExecutionGRPCCallExpectationSummary(
 	t *testing.T,
 	path string,
 	expected,
-	actual []model.TestExecutionCallSummary,
-) {
-	t.Helper()
-
-	if len(expected) != len(actual) {
-		t.Errorf("Expected %s length %d, got %d", path, len(expected), len(actual))
-		return
-	}
-
-	for i := range expected {
-		assertEqualTestExecutionCallSummary(
-			t,
-			path+"["+strconv.Itoa(i)+"]",
-			&expected[i],
-			&actual[i],
-		)
-	}
-}
-
-func assertEqualTestExecutionCallSummary(
-	t *testing.T,
-	path string,
-	expected,
-	actual *model.TestExecutionCallSummary,
-) {
-	t.Helper()
-
-	if expected.ServiceID != actual.ServiceID {
-		t.Errorf("Expected %s.ServiceID %q, got %q", path, expected.ServiceID, actual.ServiceID)
-	}
-
-	assertEqualTestExecutionHTTPCallSummary(
-		t,
-		path+".HTTP",
-		expected.HTTP,
-		actual.HTTP,
-	)
-
-	assertEqualTestExecutionGRPCCallSummary(
-		t,
-		path+".GRPC",
-		expected.GRPC,
-		actual.GRPC,
-	)
-}
-
-func assertEqualTestExecutionGRPCCallSummary(
-	t *testing.T,
-	path string,
-	expected,
-	actual *model.TestExecutionGRPCCallSummary,
+	actual *model.TestExecutionGRPCCallExpectationSummary,
 ) {
 	t.Helper()
 
@@ -470,153 +387,26 @@ func assertEqualTestExecutionGRPCCallSummary(
 		return
 	}
 
-	assertEqualTestExecutionGRPCCallRequestSummary(
-		t,
-		path+".Request",
-		&expected.Request,
-		&actual.Request,
-	)
-
-	assertEqualTestExecutionGRPCCallResponseSummary(
-		t,
-		path+".Response",
-		&expected.Response,
-		&actual.Response,
-	)
-}
-
-func assertEqualTestExecutionGRPCCallRequestSummary(
-	t *testing.T,
-	path string,
-	expected,
-	actual *model.TestExecutionGRPCCallRequestSummary,
-) {
-	t.Helper()
-
-	if expected.RPC != actual.RPC {
-		t.Errorf("Expected %s.RPC %q, got %q", path, expected.RPC, actual.RPC)
+	if expected.Service != actual.Service {
+		t.Errorf("Expected %s.Service %q, got %q", path, expected.Service, actual.Service)
 	}
-
-	assertEqualStringSliceMap(
-		t,
-		path+".Metadata",
-		expected.Metadata,
-		actual.Metadata,
-	)
-
-	assertEqualJSONValue(
-		t,
-		path+".Message",
-		expected.Message,
-		actual.Message,
-	)
-}
-
-func assertEqualTestExecutionGRPCCallResponseSummary(
-	t *testing.T,
-	path string,
-	expected,
-	actual *model.TestExecutionGRPCCallResponseSummary,
-) {
-	t.Helper()
-
-	if expected.Status != actual.Status {
-		t.Errorf("Expected %s.Status %q, got %q", path, expected.Status, actual.Status)
-	}
-
-	assertEqualStringSliceMap(
-		t,
-		path+".Metadata",
-		expected.Metadata,
-		actual.Metadata,
-	)
-
-	assertEqualJSONValue(
-		t,
-		path+".Message",
-		expected.Message,
-		actual.Message,
-	)
-}
-
-func assertEqualTestExecutionHTTPCallSummary(
-	t *testing.T,
-	path string,
-	expected,
-	actual *model.TestExecutionHTTPCallSummary,
-) {
-	t.Helper()
-
-	if expected == nil && actual == nil {
-		return
-	}
-	if expected == nil {
-		t.Errorf("Expected %s nil, got %+v", path, actual)
-		return
-	}
-	if actual == nil {
-		t.Errorf("Expected %s %+v, got nil", path, expected)
-		return
-	}
-
-	assertEqualTestExecutionHTTPCallRequestSummary(
-		t,
-		path+".Request",
-		&expected.Request,
-		&actual.Request,
-	)
-
-	assertEqualTestExecutionHTTPCallResponseSummary(
-		t,
-		path+".Response",
-		&expected.Response,
-		&actual.Response,
-	)
-}
-
-func assertEqualTestExecutionHTTPCallRequestSummary(
-	t *testing.T,
-	path string,
-	expected,
-	actual *model.TestExecutionHTTPCallRequestSummary,
-) {
-	t.Helper()
-
 	if expected.Method != actual.Method {
 		t.Errorf("Expected %s.Method %q, got %q", path, expected.Method, actual.Method)
 	}
-	if expected.Path != actual.Path {
-		t.Errorf("Expected %s.Path %q, got %q", path, expected.Path, actual.Path)
-	}
 
-	assertEqualStringSliceMap(t, path+".Query", expected.Query, actual.Query)
-	assertEqualStringSliceMap(t, path+".Headers", expected.Headers, actual.Headers)
+	assertEqualStringSliceMap(
+		t,
+		path+".Metadata",
+		expected.Metadata,
+		actual.Metadata,
+	)
 
-	if expected.BodyJSON != strings.TrimSpace(actual.BodyJSON) {
-		t.Errorf("Expected %s.BodyJSON %q, got %q", path, expected.BodyJSON, actual.BodyJSON)
-	}
-}
-
-func assertEqualTestExecutionHTTPCallResponseSummary(
-	t *testing.T,
-	path string,
-	expected,
-	actual *model.TestExecutionHTTPCallResponseSummary,
-) {
-	t.Helper()
-
-	if expected.StatusCode != actual.StatusCode {
-		t.Errorf("Expected %s.StatusCode %d, got %d", path, expected.StatusCode, actual.StatusCode)
-	}
-
-	assertEqualStringSliceMap(t, path+".Headers", expected.Headers, actual.Headers)
-
-	if expected.BodyJSON != strings.TrimSpace(actual.BodyJSON) {
-		t.Errorf("Expected %s.BodyJSON %q, got %q", path, expected.BodyJSON, actual.BodyJSON)
-	}
-	if expected.BodyText != strings.TrimSpace(actual.BodyText) {
-		t.Errorf("Expected %s.BodyText %q, got %q", path, expected.BodyText, actual.BodyText)
-	}
+	assertEqualJSONValue(
+		t,
+		path+".Message",
+		expected.Message,
+		actual.Message,
+	)
 }
 
 func assertEqualTestExecutionDeviations(
