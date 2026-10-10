@@ -1,5 +1,5 @@
-github.com/e2engine/core v0.1.2 h1:QPFPtdWizSPfC9zw1l2moO+yVSvli174LILfTnFAq3E=
-github.com/e2engine/core v0.1.2/go.mod h1:JM4y6XlRsLgYSFXph1T8qPU+Cp5s+WkQYlaJUBvnTzA=
+github.com/e2engine/core v0.2.0 h1:yjSKpI/qSscwGAK3/7Eje26BLhQKo7a5T1Ubm4q/hOo=
+github.com/e2engine/core v0.2.0/go.mod h1:JM4y6XlRsLgYSFXph1T8qPU+Cp5s+WkQYlaJUBvnTzA=
 github.com/e2engine/instrumentation-go v0.1.1 h1:pkOQIQWWkGqHdU1F/b0tCtpFyNDc09kKebYZElHZS9k=
 github.com/e2engine/instrumentation-go v0.1.1/go.mod h1:zpWF7koAp+vFqYAfOx3mOJFn4GpLtzetguAs8n7+wIE=
 github.com/e2engine/instrumentation-go/grpc v0.1.1 h1:0sqxF3oCdxdVaJwzTshaf79VMXglVHJQ1bLte7vnH14=
