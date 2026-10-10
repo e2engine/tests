@@ -17,77 +17,14 @@ summary:
       status_code: 502
       body_text: dependency returned non-ok status
 
-  expect:
-    http:
-      status_code: 200
-      body_json: '{"status":"ok"}'
-
-    calls:
-      - service_id: entitlements
-        count: 1
-        grpc:
-          service: entitlements.v1.EntitlementsService
-          method: UnknownMethod
-          message:
-            customer_id: customer-1
-
-  calls:
+  expected_calls:
     - service_id: entitlements
+      count: 1
       grpc:
-        request:
-          rpc: /entitlements.v1.EntitlementsService/UnknownMethod
-          metadata:
-            ":authority":
-              - "127.0.0.1:8083"
-            "content-type":
-              - "application/grpc"
-            "user-agent":
-              - "grpc-go/1.84.0"
-          message:
-            - 10
-            - 10
-            - 99
-            - 117
-            - 115
-            - 116
-            - 111
-            - 109
-            - 101
-            - 114
-            - 45
-            - 49
-
-        response:
-          status: Unimplemented
-          metadata:
-            content-type:
-              - "application/grpc+proto"
-            x-e2engine-mock-miss:
-              - "true"
-
-    - service_id: gateway
-      http:
-        request:
-          method: GET
-          path: /check
-          headers:
-            Accept-Encoding:
-              - gzip
-            User-Agent:
-              - Go-http-client/1.1
-
-        response:
-          status_code: 502
-          headers:
-            Content-Length:
-              - "34"
-            Content-Type:
-              - text/plain; charset=utf-8
-            Date:
-              - Wed, 19 Aug 2026 15:16:47 GMT
-            X-Content-Type-Options:
-              - nosniff
-          body_json: dependency returned non-ok status
+        service: entitlements.v1.EntitlementsService
+        method: UnknownMethod
+        message:
+          customer_id: customer-1
 
   deviations:
     - field: status_code

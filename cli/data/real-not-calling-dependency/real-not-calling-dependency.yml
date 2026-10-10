@@ -12,12 +12,9 @@ summary:
     http:
       method: GET
       url: http://127.0.0.1:8082/ok
-  expect:
-    http:
-      status_code: 200
-    calls:
-      - service_id: dependency
-        count: 1
-        http:
-          method: GET
-          path: /dependency
+  expected_calls:
+    - service_id: dependency
+      count: 1
+      http:
+        method: GET
+        path: /dependency

@@ -13,8 +13,8 @@ summary:
       target: 127.0.0.1:8083
       service: ok.v1.OKService
       method: OK
-  expect:
-    grpc:
-      status: OK
-    calls:
-      - service_id: socket-grpc-error
+  expected_calls:
+    - service_id: socket-grpc-error
+      grpc:
+        service: ok.v1.OKService
+        method: OK

@@ -13,3 +13,8 @@ spec:
     http:
       status: 200
       body: '{"status":"ok"}'
+    calls:
+      - service_id: gateway
+        http:
+          method: GET
+          path: /error

@@ -31,66 +31,14 @@
         }
       }
     },
-    "expect": {
-      "grpc": {
-        "status": "OK"
-      },
-      "calls": [
-        {
-          "service_id": "direct-mocked-grpc",
-          "grpc": {
-            "service": "entitlements.v1.EntitlementsService",
-            "method": "CheckEntitlement",
-            "message": {
-              "customer_id": "customer-1"
-            }
-          }
-        }
-      ]
-    },
-    "calls": [
+    "expected_calls": [
       {
         "service_id": "direct-mocked-grpc",
         "grpc": {
-          "request": {
-            "rpc": "/entitlements.v1.EntitlementsService/CheckEntitlement",
-            "metadata": {
-              ":authority": [
-                "127.0.0.1:8083"
-              ],
-              "content-type": [
-                "application/grpc"
-              ],
-              "user-agent": [
-                "grpc-go/1.84.0"
-              ]
-            },
-            "message": [
-              10,
-              10,
-              99,
-              117,
-              115,
-              116,
-              111,
-              109,
-              101,
-              114,
-              45,
-              49
-            ]
-          },
-          "response": {
-            "status": "OK",
-            "metadata": {
-              "content-type": [
-                "application/grpc+proto"
-              ]
-            },
-            "message": [
-              8,
-              1
-            ]
+          "service": "entitlements.v1.EntitlementsService",
+          "method": "CheckEntitlement",
+          "message": {
+            "customer_id": "customer-1"
           }
         }
       }

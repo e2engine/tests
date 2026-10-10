@@ -11,71 +11,20 @@ summary:
     http:
       method: GET
       url: http://127.0.0.1:8082/check
+
   response:
       http:
         status_code: 502
         body_text: dependency returned non-200 status
-  expect:
-    http:
-      status_code: 200
-      body_json: '{"status":"ok"}'
-    calls:
-      - service_id: entitlements
-        count: 1
-        http:
-          method: POST
-          path: /healthz
-          body_json: '{"customer_id":"customer-2"}'
-  calls:
+
+  expected_calls:
     - service_id: entitlements
+      count: 1
       http:
-        request:
-          method: POST
-          path: /healthz
-          body_json: '{"customer_id":"customer-1"}'
-          headers:
-            Accept-Encoding:
-              - gzip
-            Content-Length:
-              - "28"
-            User-Agent:
-              - Go-http-client/1.1
-        response:
-          status_code: 501
-          headers:
-            Content-Length:
-              - "19"
-            Content-Type:
-              - text/plain; charset=utf-8
-            Date:
-              - Wed, 19 Aug 2026 15:16:47 GMT
-            X-Content-Type-Options:
-              - nosniff
-            X-E2engine-Mock-Miss:
-              - true
-          body_json: no fixture matched
-    - service_id: gateway
-      http:
-        request:
-          method: GET
-          path: /check
-          headers:
-            Accept-Encoding:
-              - gzip
-            User-Agent:
-              - Go-http-client/1.1
-        response:
-          status_code: 502
-          headers:
-            Content-Length:
-              - "35"
-            Content-Type:
-              - text/plain; charset=utf-8
-            Date:
-              - Wed, 19 Aug 2026 15:16:47 GMT
-            X-Content-Type-Options:
-              - nosniff
-          body_json: dependency returned non-200 status
+        method: POST
+        path: /healthz
+        body_json: '{"customer_id":"customer-2"}'
+
   deviations:
     - field: status_code
       expected: "200"

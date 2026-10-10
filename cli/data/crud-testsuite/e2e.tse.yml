@@ -28,57 +28,16 @@ tests:
         http:
           status_code: 200
           body_json: '{"status":"ok"}'
-      expect:
-        http:
-          status_code: 200
-          body_json: '{"status":"ok"}'
-        calls:
-          - service_id: entitlements
-            count: 1
-            http:
-              method: GET
-              path: /healthz
-      calls:
+      expected_calls:
         - service_id: entitlements
+          count: 1
           http:
-            request:
-              method: GET
-              path: /healthz
-              headers:
-                Accept-Encoding:
-                  - gzip
-                User-Agent:
-                  - Go-http-client/1.1
-            response:
-              status_code: 200
-              headers:
-                Content-Length:
-                  - "15"
-                Content-Type:
-                  - application/json
-                Date:
-                  - Wed, 19 Aug 2026 15:16:47 GMT
-              body_json: '{"status":"ok"}'
+            method: GET
+            path: /healthz
         - service_id: gateway
           http:
-            request:
-              method: GET
-              path: /check
-              headers:
-                Accept-Encoding:
-                  - gzip
-                User-Agent:
-                  - Go-http-client/1.1
-            response:
-              status_code: 200
-              headers:
-                Content-Length:
-                  - "15"
-                Content-Type:
-                  - application/json
-                Date:
-                  - Wed, 19 Aug 2026 15:16:47 GMT
-              body_json: '{"status":"ok"}'
+            method: GET
+            path: /check
   - id: f5497dfbbf8392b4828f5323c07e4b5cc8026790caca7b3065350413bebbd4e3
     started_at: 2026-08-19T15:16:47.974744Z
     finished_at: 2026-08-19T15:16:47.993394Z
@@ -96,31 +55,11 @@ tests:
         http:
           status_code: 500
           body_json: '{"error":"simulated error response"}'
-      expect:
-        http:
-          status_code: 200
-          body_json: '{"status":"ok"}'
-      calls:
+      expected_calls:
         - service_id: gateway
           http:
-            request:
-              method: GET
-              path: /error
-              headers:
-                Accept-Encoding:
-                  - gzip
-                User-Agent:
-                  - Go-http-client/1.1
-            response:
-              status_code: 500
-              headers:
-                Content-Length:
-                  - "37"
-                Content-Type:
-                  - application/json
-                Date:
-                  - Wed, 19 Aug 2026 15:16:47 GMT
-              body_json: '{"error":"simulated error response"}'
+            method: GET
+            path: /error
       deviations:
         - field: status_code
           expected: "200"
