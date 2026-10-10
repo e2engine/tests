@@ -18,28 +18,8 @@ summary:
       metadata:
         "content-type":
           - "application/grpc"
-  expect:
-    grpc:
-      status: OK
-    calls:
-      - service_id: direct-real-grpc
-        grpc:
-          service: ok.v1.OKService
-          method: OK
-  calls:
+  expected_calls:
     - service_id: direct-real-grpc
       grpc:
-        request:
-          rpc: /ok.v1.OKService/OK
-          metadata:
-            ":authority":
-              - "127.0.0.1:8083"
-            "content-type":
-              - "application/grpc"
-            "user-agent":
-              - "grpc-go/1.84.0"
-        response:
-          status: OK
-          metadata:
-            "content-type":
-              - "application/grpc+proto"
+        service: ok.v1.OKService
+        method: OK

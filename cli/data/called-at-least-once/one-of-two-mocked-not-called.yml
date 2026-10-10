@@ -14,32 +14,11 @@ summary:
   response:
     http:
       status_code: 200
-  expect:
-    http:
-      status_code: 200
-    calls:
-      - service_id: not-called
-        http:
-          method: GET
-          path: /healthz
-  calls:
-    - service_id: called
+  expected_calls:
+    - service_id: not-called
       http:
-        request:
-          method: GET
-          path: /healthz
-          headers:
-            Accept-Encoding:
-              - gzip
-            User-Agent:
-              - Go-http-client/1.1
-        response:
-          status_code: 200
-          headers:
-            Content-Length:
-              - "0"
-            Date:
-              - Wed, 19 Aug 2026 15:16:47 GMT
+        method: GET
+        path: /healthz
   deviations:
     - field: calls.not-called.count
       expected: "at least 1"

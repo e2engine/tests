@@ -15,54 +15,9 @@ summary:
     http:
       status_code: 200
       body_json: '{"status":"ok"}'
-  expect:
-    http:
-      status_code: 200
-      body_json: '{"status":"ok"}'
-    calls:
-      - service_id: entitlements
-        count: 1
-        http:
-          method: GET
-          path: /healthz
-  calls:
+  expected_calls:
     - service_id: entitlements
+      count: 1
       http:
-        request:
-          method: GET
-          path: /healthz
-          headers:
-            Accept-Encoding:
-              - gzip
-            User-Agent:
-              - Go-http-client/1.1
-        response:
-          status_code: 200
-          headers:
-            Content-Length:
-              - "15"
-            Content-Type:
-              - application/json
-            Date:
-              - Wed, 19 Aug 2026 15:16:47 GMT
-          body_json: '{"status":"ok"}'
-    - service_id: gateway
-      http:
-        request:
-          method: GET
-          path: /check
-          headers:
-            Accept-Encoding:
-              - gzip
-            User-Agent:
-              - Go-http-client/1.1
-        response:
-          status_code: 200
-          headers:
-            Content-Length:
-              - "15"
-            Content-Type:
-              - application/json
-            Date:
-              - Wed, 19 Aug 2026 15:16:47 GMT
-          body_json: '{"status":"ok"}'
+        method: GET
+        path: /healthz

@@ -12,11 +12,8 @@ summary:
     http:
       method: GET
       url: http://127.0.0.1:8082/healthz
-  expect:
-    http:
-      status_code: 200
-    calls:
-      - service_id: missing-service
-        http:
-          method: GET
-          path: /healthz
+  expected_calls:
+    - service_id: missing-service
+      http:
+        method: GET
+        path: /healthz

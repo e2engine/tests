@@ -14,33 +14,12 @@ summary:
   response:
     http:
       status_code: 200
-  expect:
-    http:
-      status_code: 201
-    calls:
-      - service_id: wrong-call-params
-        count: 1
-        http:
-          method: POST
-          path: /healthz
-  calls:
+  expected_calls:
     - service_id: wrong-call-params
+      count: 1
       http:
-        request:
-          method: GET
-          path: /healthz
-          headers:
-            Accept-Encoding:
-              - gzip
-            User-Agent:
-              - Go-http-client/1.1
-        response:
-          status_code: 200
-          headers:
-            Content-Length:
-              - "0"
-            Date:
-              - Wed, 19 Aug 2026 15:16:47 GMT
+        method: POST
+        path: /healthz
   deviations:
     - field: status_code
       expected: "201"
