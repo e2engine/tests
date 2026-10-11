@@ -6,4 +6,4 @@ spec:
   request: {}
   expect:
     http:
-      status: 200
+      status_code: 200

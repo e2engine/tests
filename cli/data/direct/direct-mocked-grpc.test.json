@@ -1,5 +1,5 @@
 {
-  "kind": "test",
+  "kind": "Test",
   "version": "1.0.0",
   "name": "direct-mocked-grpc",
   "description": "direct-mocked-grpc service is called at least once (calls count is not specified)",
@@ -25,7 +25,8 @@
             "service": "entitlements.v1.EntitlementsService",
             "method": "CheckEntitlement",
             "message": {
-              "customer_id": "customer-1"
+              "operator": "equals",
+              "value": "{\"customer_id\": \"customer-1\"}"
             }
           }
         }

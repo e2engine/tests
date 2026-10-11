@@ -13,8 +13,16 @@ spec:
   expect:
     grpc:
       status: OK
+      metadata:
+        "content-type":
+          - "application/grpc"
     calls:
       - service_id: direct-real-grpc
+        count: 1
         grpc:
           service: ok.v1.OKService
           method: OK
+          metadata:
+            "content-type":
+              - "application/grpc"
+          response_status: OK

@@ -5,17 +5,15 @@ import (
 	"path"
 	"testing"
 
-	"github.com/e2engine/core/model"
-
 	"github.com/e2engine/tests/cli/harness"
-	"github.com/e2engine/tests/util"
 )
 
 func TestValidateExpectedCalls(t *testing.T) {
 	dataDir := "../data/validate-expected-calls"
 
 	tests := []struct {
-		name string
+		name        string
+		checkParams func(id string) *checkTestExecutionParams
 	}{
 		{
 			name: "expected-call-unknown-service",
@@ -28,9 +26,23 @@ func TestValidateExpectedCalls(t *testing.T) {
 		},
 		{
 			name: "expected-calls-twice",
+			checkParams: func(id string) *checkTestExecutionParams {
+				return &checkTestExecutionParams{
+					useHTTPRequestHeaders: map[string]string{
+						"E2engine-Test-Execution-Id": id,
+					},
+				}
+			},
 		},
 		{
 			name: "wrong-call-params",
+			checkParams: func(id string) *checkTestExecutionParams {
+				return &checkTestExecutionParams{
+					useHTTPRequestHeaders: map[string]string{
+						"E2engine-Test-Execution-Id": id,
+					},
+				}
+			},
 		},
 	}
 
@@ -68,17 +80,20 @@ func TestValidateExpectedCalls(t *testing.T) {
 			// get testexecution by ID
 			actualTestExecution := h.GetTestExecution(ctx, testExecutionID)
 
-			expectedTestExecution := util.Load[model.TestExecution](
+			if test.checkParams == nil {
+				test.checkParams = func(id string) *checkTestExecutionParams {
+					return nil
+				}
+			}
+			checkTestExecution(
 				t,
+				testExecutionID,
+				environmentID,
+				testID,
 				path.Join(dataDir, test.name+".yml"),
+				&actualTestExecution,
+				test.checkParams(testExecutionID),
 			)
-			expectedTestExecution.ID = testExecutionID
-			expectedTestExecution.TestID = testID
-			expectedTestExecution.EnvironmentID = environmentID
-			expectedTestExecution.StartedAt = actualTestExecution.StartedAt
-			expectedTestExecution.FinishedAt = actualTestExecution.FinishedAt
-
-			util.AssertEqualTestExecutions(t, &expectedTestExecution, &actualTestExecution)
 		})
 	}
 }

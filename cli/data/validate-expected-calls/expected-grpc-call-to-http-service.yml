@@ -8,12 +8,3 @@ test_id: ae619f9418f89041a5f6e0e952eae9fb9495e2c271b66739ffd6fae46f9ff30a
 test_name: expected-grpc-call-to-http-service
 summary:
   error: "invalid test execution input, environment.service.id: http-dependency, environment.service.kind: http, validation: expected gRPC call references non-gRPC service"
-  request:
-    http:
-      method: GET
-      url: http://127.0.0.1:8082/healthz
-  expected_calls:
-    - service_id: http-dependency
-      grpc:
-        service: example.Dependency
-        method: Check

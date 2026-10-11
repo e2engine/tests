@@ -14,7 +14,7 @@ spec:
             http:
               method: POST
               path: /check
-              body: '{"broken":'
+              body_json: '{"broken":'
           then:
             http:
-              status: 200
+              status_code: 200

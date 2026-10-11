@@ -7,8 +7,8 @@ spec:
     http:
       method: POST
       url: http://127.0.0.1:8080/check
-      body: '{"broken":'
+      body_json: '{"broken":'
 
   expect:
     http:
-      status: 200
+      status_code: 200

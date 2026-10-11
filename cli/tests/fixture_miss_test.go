@@ -5,38 +5,71 @@ import (
 	"path"
 	"testing"
 
-	"github.com/e2engine/core/model"
-
 	"github.com/e2engine/tests/cli/harness"
-	"github.com/e2engine/tests/util"
 )
 
 func TestFixtureMiss(t *testing.T) {
 	dataDir := "../data/fixture-miss"
 
 	tests := []struct {
-		name     string
-		services []string
+		name        string
+		services    []string
+		checkParams func(id string) *checkTestExecutionParams
 	}{
 		{
 			name:     "fixture-miss-http-path",
 			services: []string{"gateway-http-path"},
+			checkParams: func(id string) *checkTestExecutionParams {
+				return &checkTestExecutionParams{
+					useHTTPRequestHeaders: map[string]string{
+						"E2engine-Test-Execution-Id": id,
+					},
+				}
+			},
 		},
 		{
 			name:     "fixture-miss-http-body",
 			services: []string{"gateway-http-body"},
+			checkParams: func(id string) *checkTestExecutionParams {
+				return &checkTestExecutionParams{
+					useHTTPRequestHeaders: map[string]string{
+						"E2engine-Test-Execution-Id": id,
+					},
+				}
+			},
 		},
 		{
 			name:     "fixture-miss-grpc-message",
 			services: []string{"gateway-grpc-message"},
+			checkParams: func(id string) *checkTestExecutionParams {
+				return &checkTestExecutionParams{
+					useHTTPRequestHeaders: map[string]string{
+						"E2engine-Test-Execution-Id": id,
+					},
+				}
+			},
 		},
 		{
 			name:     "fixture-miss-grpc-method",
 			services: []string{"gateway-grpc-method"},
+			checkParams: func(id string) *checkTestExecutionParams {
+				return &checkTestExecutionParams{
+					useHTTPRequestHeaders: map[string]string{
+						"E2engine-Test-Execution-Id": id,
+					},
+				}
+			},
 		},
 		{
 			name:     "fixture-miss-http-path-multiple",
 			services: []string{"gateway-http-path"},
+			checkParams: func(id string) *checkTestExecutionParams {
+				return &checkTestExecutionParams{
+					useHTTPRequestHeaders: map[string]string{
+						"E2engine-Test-Execution-Id": id,
+					},
+				}
+			},
 		},
 	}
 
@@ -73,6 +106,7 @@ func TestFixtureMiss(t *testing.T) {
 			)
 
 			// execute test
+			t.Setenv("E2ENGINE_RUNNER_WORKER_REPORTER_DUMP_PAYLOAD", "true")
 			testExecutionID := h.RunTest(
 				ctx,
 				testID,
@@ -82,17 +116,21 @@ func TestFixtureMiss(t *testing.T) {
 			// get testexecution by ID
 			actualTestExecution := h.GetTestExecution(ctx, testExecutionID)
 
-			expectedTestExecution := util.Load[model.TestExecution](
-				t,
-				path.Join(dataDir, test.name+".yml"),
-			)
-			expectedTestExecution.ID = testExecutionID
-			expectedTestExecution.TestID = testID
-			expectedTestExecution.EnvironmentID = environmentID
-			expectedTestExecution.StartedAt = actualTestExecution.StartedAt
-			expectedTestExecution.FinishedAt = actualTestExecution.FinishedAt
+			if test.checkParams == nil {
+				test.checkParams = func(id string) *checkTestExecutionParams {
+					return nil
+				}
+			}
 
-			util.AssertEqualTestExecutions(t, &expectedTestExecution, &actualTestExecution)
+			checkTestExecution(
+				t,
+				testExecutionID,
+				environmentID,
+				testID,
+				path.Join(dataDir, test.name+".yml"),
+				&actualTestExecution,
+				test.checkParams(testExecutionID),
+			)
 		})
 	}
 }

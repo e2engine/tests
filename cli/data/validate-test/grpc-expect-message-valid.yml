@@ -12,5 +12,4 @@ spec:
   expect:
     grpc:
       status: OK
-      message:
-        value: test
+      message: '{"value": "test"}'

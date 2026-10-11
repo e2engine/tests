@@ -98,25 +98,25 @@ func TestValidateTest(t *testing.T) {
 		{
 			name:        "http-request-invalid-json",
 			stdout:      "",
-			stderr:      "invalid test spec, fields: Spec.Request.HTTP.Body",
+			stderr:      "invalid test spec, fields: Spec.Request.HTTP.BodyJSON",
 			expectError: true,
 		},
 		{
 			name:        "http-expect-status-too-low",
 			stdout:      "",
-			stderr:      "invalid test spec, fields: Spec.Expect.HTTP.Status",
+			stderr:      "invalid test spec, fields: Spec.Expect.HTTP.StatusCode",
 			expectError: true,
 		},
 		{
 			name:        "http-expect-status-too-high",
 			stdout:      "",
-			stderr:      "invalid test spec, fields: Spec.Expect.HTTP.Status",
+			stderr:      "invalid test spec, fields: Spec.Expect.HTTP.StatusCode",
 			expectError: true,
 		},
 		{
 			name:        "http-expect-invalid-json",
 			stdout:      "",
-			stderr:      "invalid test spec, fields: Spec.Expect.HTTP.Body",
+			stderr:      "invalid test spec, fields: Spec.Expect.HTTP.BodyJSON",
 			expectError: true,
 		},
 		{
@@ -188,7 +188,7 @@ func TestValidateTest(t *testing.T) {
 		{
 			name:        "call-http-invalid-json",
 			stdout:      "",
-			stderr:      "invalid test spec, fields: Spec.Expect.Calls[0].HTTP.Body",
+			stderr:      "invalid test spec, fields: Spec.Expect.Calls[0].HTTP.BodyJSON",
 			expectError: true,
 		},
 		{

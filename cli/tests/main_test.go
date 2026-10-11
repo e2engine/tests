@@ -50,8 +50,16 @@ func checkTestSuite(t *testing.T, id, path string, actual *model.TestSuite) {
 	util.AssertEqualTestSuites(t, &expected, actual)
 }
 
+type checkTestExecutionParams struct {
+	useHTTPRequestHeaders  map[string]string
+	useGRPCRequestMetadata map[string]string
+}
+
 func checkTestExecution(
-	t *testing.T, id, envID, testID, path string, actual *model.TestExecution,
+	t *testing.T,
+	id, envID, testID, path string,
+	actual *model.TestExecution,
+	params *checkTestExecutionParams,
 ) {
 	t.Helper()
 
@@ -62,11 +70,33 @@ func checkTestExecution(
 	expected.StartedAt = actual.StartedAt
 	expected.FinishedAt = actual.FinishedAt
 
+	if params != nil {
+		if len(params.useHTTPRequestHeaders) > 0 {
+			for k, v := range params.useHTTPRequestHeaders {
+				expected.Summary.Request.HTTP.Headers[k] = []string{v}
+			}
+		}
+		if len(params.useGRPCRequestMetadata) > 0 {
+			for k, v := range params.useGRPCRequestMetadata {
+				expected.Summary.Request.GRPC.Metadata[k] = []string{v}
+			}
+		}
+	}
+
 	util.AssertEqualTestExecutions(t, &expected, actual)
 }
 
+type checkTestSuiteExecutionParams struct {
+	useHTTPRequestHeaders            map[string]string
+	useHTTPRequestExecutionIDHeaders map[string]string // test name -> received header value
+}
+
 func checkTestSuiteExecution(
-	t *testing.T, id, envID, tsID, path string, actual *model.TestSuiteExecution, skipTests bool,
+	t *testing.T,
+	id, envID, tsID, path string,
+	actual *model.TestSuiteExecution,
+	skipTests bool,
+	params *checkTestSuiteExecutionParams,
 ) {
 	t.Helper()
 
@@ -76,6 +106,23 @@ func checkTestSuiteExecution(
 	expected.TestSuiteID = tsID
 	expected.StartedAt = actual.StartedAt
 	expected.FinishedAt = actual.FinishedAt
+
+	if params != nil {
+		if len(params.useHTTPRequestHeaders) > 0 {
+			for k, v := range params.useHTTPRequestHeaders {
+				for _, test := range expected.Tests {
+					test.Summary.Request.HTTP.Headers[k] = []string{v}
+				}
+			}
+		}
+
+		for i := range expected.Tests {
+			if executionID, ok := params.useHTTPRequestExecutionIDHeaders[expected.Tests[i].TestName]; ok {
+				expected.Tests[i].Summary.Request.HTTP.Headers["E2engine-Test-Execution-Id"] =
+					[]string{executionID}
+			}
+		}
+	}
 
 	util.AssertEqualTestSuiteExecutions(t, &expected, actual)
 

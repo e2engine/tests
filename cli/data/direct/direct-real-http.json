@@ -19,12 +19,14 @@
         "status_code": 200
       }
     },
-    "expected_calls": [
+    "calls": [
       {
         "service_id": "direct-real-http",
+        "count": 1,
         "http": {
           "method": "GET",
-          "path": "/ok"
+          "path": "/ok",
+          "response_status_code": 200
         }
       }
     ]

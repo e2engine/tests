@@ -10,5 +10,5 @@ spec:
 
   expect:
     http:
-      status: 200
-      body: '{"broken":'
+      status_code: 200
+      body_json: '{"broken":'

@@ -5,6 +5,7 @@ import (
 	"path"
 	"sort"
 	"testing"
+	"time"
 
 	"github.com/e2engine/tests/cli/harness"
 )
@@ -96,6 +97,10 @@ func TestDirectCRUDTestSuite(t *testing.T) {
 		gateway.Stop(t)
 	})
 
+	time.Sleep(1 * time.Second) // wait for service to start
+
+	t.Setenv("E2ENGINE_RUNNER_WORKER_REPORTER_DUMP_PAYLOAD", "true")
+
 	// execute testsuite
 	tseID := h.RunTestSuite(
 		ctx,
@@ -110,11 +115,30 @@ func TestDirectCRUDTestSuite(t *testing.T) {
 	}
 
 	actualTSE2 := tses2[0]
-	checkTestSuiteExecution(t, tseID, environmentID, tsID, tseSpecPath, &actualTSE2, true)
+	checkTestSuiteExecution(t, tseID, environmentID, tsID, tseSpecPath, &actualTSE2, true, nil)
 
 	// get testsuite execution by ID
 	actualTSE4 := h.GetTestSuiteExecution(ctx, tseID)
-	checkTestSuiteExecution(t, tseID, environmentID, tsID, tseSpecPath, &actualTSE4, false)
+
+	const executionIDHeader = "E2engine-Test-Execution-Id"
+	getExecutionIDHeader := func(headers map[string][]string) string {
+		values, ok := headers[executionIDHeader]
+		if !ok || len(values) == 0 {
+			t.Fatalf("Expected HTTP request header %q to be present", executionIDHeader)
+		}
+		return values[0]
+	}
+
+	useExecutionIDHeaders := make(map[string]string, len(actualTSE4.Tests))
+	for _, test := range actualTSE4.Tests {
+		useExecutionIDHeaders[test.TestName] =
+			getExecutionIDHeader(test.Summary.Request.HTTP.Headers)
+	}
+
+	params2 := &checkTestSuiteExecutionParams{
+		useHTTPRequestExecutionIDHeaders: useExecutionIDHeaders,
+	}
+	checkTestSuiteExecution(t, tseID, environmentID, tsID, tseSpecPath, &actualTSE4, false, params2)
 
 	// list test executions, expect 2
 	tes5 := h.ListTestExecutions(ctx)
@@ -129,10 +153,38 @@ func TestDirectCRUDTestSuite(t *testing.T) {
 
 	// compare test executions
 	actualTE5 := tes5[0]
-	checkTestExecution(t, actualTE5.ID, environmentID, test1ID, te1SpecPath, &actualTE5)
+	checkTestExecution(
+		t,
+		actualTE5.ID,
+		environmentID,
+		test1ID,
+		te1SpecPath,
+		&actualTE5,
+		&checkTestExecutionParams{
+			useHTTPRequestHeaders: map[string]string{
+				executionIDHeader: getExecutionIDHeader(
+					actualTE5.Summary.Request.HTTP.Headers,
+				),
+			},
+		},
+	)
 
 	actualTE6 := tes5[1]
-	checkTestExecution(t, actualTE6.ID, environmentID, test2ID, te2SpecPath, &actualTE6)
+	checkTestExecution(
+		t,
+		actualTE6.ID,
+		environmentID,
+		test2ID,
+		te2SpecPath,
+		&actualTE6,
+		&checkTestExecutionParams{
+			useHTTPRequestHeaders: map[string]string{
+				executionIDHeader: getExecutionIDHeader(
+					actualTE6.Summary.Request.HTTP.Headers,
+				),
+			},
+		},
+	)
 
 	// delete testsuite execution by ID
 	h.DeleteTestSuiteExecution(ctx, tseID, "")

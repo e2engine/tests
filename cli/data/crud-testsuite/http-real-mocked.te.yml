@@ -10,18 +10,18 @@ summary:
   request:
     http:
       method: GET
-      url: http://127.0.0.1:8082/check
+      url: http://127.0.0.1:9000/check
+      headers:
+        "E2engine-Test-Execution-Id":
+          - "c1079d334b1a17b4a5fa7588a90d045ed01ea241c53ab51afa0d8b8620837e7b"
   response:
     http:
       status_code: 200
       body_json: '{"status":"ok"}'
-  expected_calls:
+  calls:
     - service_id: entitlements
       count: 1
       http:
         method: GET
         path: /healthz
-    - service_id: gateway
-      http:
-        method: GET
-        path: /check
+        response_status_code: 200

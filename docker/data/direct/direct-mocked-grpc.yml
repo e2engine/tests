@@ -9,9 +9,13 @@ test_name: direct-mocked-grpc
 summary:
   request:
     grpc:
+      target: "127.0.0.1:8083"
       service: entitlements.v1.EntitlementsService
       service_id: direct-mocked-grpc
       method: CheckEntitlement
+      metadata:
+        "e2engine-test-execution-id":
+          - "c1079d334b1a17b4a5fa7588a90d045ed01ea241c53ab51afa0d8b8620837e7b"
       message:
         customer_id: customer-1
   response:
@@ -22,10 +26,12 @@ summary:
       metadata:
         "content-type":
           - "application/grpc"
-  expected_calls:
+  calls:
     - service_id: direct-mocked-grpc
+      count: 1
       grpc:
         service: entitlements.v1.EntitlementsService
         method: CheckEntitlement
         message:
           customer_id: customer-1
+        response_status: OK

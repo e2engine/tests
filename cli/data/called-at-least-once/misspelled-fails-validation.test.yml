@@ -1,7 +1,7 @@
 kind: Test
 version: 1.0.0
-name: misspelled-called-at-least-once
-description: misspelled service is called at least once (calls count is not specified)
+name: misspelled-fails-validation
+description: validation fails because the service_id in the expect.calls is misspelled
 spec:
   request:
     http:
@@ -9,7 +9,7 @@ spec:
       url: http://127.0.0.1:8083/healthz
   expect:
     http:
-      status: 200
+      status_code: 200
     calls:
       - service_id: misspelled
         http:

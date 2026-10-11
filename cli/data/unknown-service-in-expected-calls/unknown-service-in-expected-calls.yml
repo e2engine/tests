@@ -8,13 +8,3 @@ test_id: ae619f9418f89041a5f6e0e952eae9fb9495e2c271b66739ffd6fae46f9ff30a
 test_name: unknown-service-in-expected-calls
 summary:
   error: "invalid test execution input, environment.service.id: not-called, validation: expected call references unknown environment service"
-  request:
-    http:
-      method: GET
-      url: http://127.0.0.1:8083/healthz
-  expected_calls:
-    - service_id: not-called
-      count: 1
-      http:
-        method: GET
-        path: /healthz

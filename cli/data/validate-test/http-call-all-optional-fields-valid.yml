@@ -10,7 +10,7 @@ spec:
 
   expect:
     http:
-      status: 200
+      status_code: 200
     calls:
       - service_id: dependency
         count: 1
@@ -23,4 +23,4 @@ spec:
           headers:
             Content-Type:
               - application/json
-          body: '{"value":"test"}'
+          body_json: '{"value":"test"}'

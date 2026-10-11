@@ -15,20 +15,25 @@ func TestDirect(t *testing.T) {
 	dataDir := "../data/direct"
 
 	tests := []struct {
-		name     string
-		services []string
+		name         string
+		services     []string
+		httpHeader   bool
+		grpcMetadata bool
 	}{
 		{
-			name: "direct-mocked-http",
+			name:       "direct-mocked-http",
+			httpHeader: true,
 		},
 		{
-			name: "direct-mocked-grpc",
+			name:         "direct-mocked-grpc",
+			grpcMetadata: true,
 		},
 		{
 			name: "direct-real-http",
 			services: []string{
 				"ok-http",
 			},
+			httpHeader: true,
 		},
 	}
 
@@ -100,6 +105,14 @@ func TestDirect(t *testing.T) {
 			expectedTestExecution.EnvironmentID = environmentID
 			expectedTestExecution.StartedAt = actualTestExecution.StartedAt
 			expectedTestExecution.FinishedAt = actualTestExecution.FinishedAt
+			if test.httpHeader {
+				expectedTestExecution.Summary.Request.HTTP.Headers["E2engine-Test-Execution-Id"] =
+					[]string{testExecutionID}
+			}
+			if test.grpcMetadata {
+				expectedTestExecution.Summary.Request.GRPC.Metadata["e2engine-test-execution-id"] =
+					[]string{testExecutionID}
+			}
 
 			util.AssertEqualTestExecutions(
 				t,

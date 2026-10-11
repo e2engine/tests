@@ -1,5 +1,5 @@
 {
-  "kind": "test",
+  "kind": "Test",
   "version": "1.0.0",
   "name": "direct-real-http",
   "description": "direct-real-http service is called at least once (calls count is not specified)",
@@ -12,7 +12,7 @@
     },
     "expect": {
       "http": {
-        "status": 200
+        "status_code": 200
       },
       "calls": [
         {

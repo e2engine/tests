@@ -19,12 +19,14 @@
         "status_code": 200
       }
     },
-    "expected_calls": [
+    "calls": [
       {
         "service_id": "direct-mocked-http",
+        "count": 1,
         "http": {
           "method": "GET",
-          "path": "/healthz"
+          "path": "/healthz",
+          "response_status_code": 200
         }
       }
     ]

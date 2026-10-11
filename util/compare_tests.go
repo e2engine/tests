@@ -59,8 +59,8 @@ func assertEqualRequestSpec(
 ) {
 	t.Helper()
 
-	assertEqualHTTPRequestSpec(t, path+".HTTP", expected.HTTP, actual.HTTP)
-	assertEqualGRPCRequestSpec(t, path+".GRPC", expected.GRPC, actual.GRPC)
+	assertEqualHTTPRequest(t, path+".HTTP", expected.HTTP, actual.HTTP)
+	assertEqualGRPCRequest(t, path+".GRPC", expected.GRPC, actual.GRPC)
 }
 
 func assertEqualExpectSpec(
@@ -71,8 +71,8 @@ func assertEqualExpectSpec(
 ) {
 	t.Helper()
 
-	assertEqualHTTPExpectSpec(t, path+".HTTP", expected.HTTP, actual.HTTP)
-	assertEqualGRPCExpectSpec(t, path+".GRPC", expected.GRPC, actual.GRPC)
+	assertEqualHTTPResponsePattern(t, path+".HTTP", expected.HTTP, actual.HTTP)
+	assertEqualGRPCResponsePattern(t, path+".GRPC", expected.GRPC, actual.GRPC)
 
 	if len(expected.Calls) != len(actual.Calls) {
 		t.Errorf(
@@ -85,7 +85,7 @@ func assertEqualExpectSpec(
 	}
 
 	for i := range expected.Calls {
-		assertEqualCallExpectation(
+		assertEqualServiceExpectedCalls(
 			t,
 			path+".Calls["+strconv.Itoa(i)+"]",
 			&expected.Calls[i],
@@ -94,11 +94,11 @@ func assertEqualExpectSpec(
 	}
 }
 
-func assertEqualCallExpectation(
+func assertEqualServiceExpectedCalls(
 	t *testing.T,
 	path string,
 	expected,
-	actual *model.CallExpectation,
+	actual *model.ServiceExpectedCalls,
 ) {
 	t.Helper()
 
@@ -112,323 +112,8 @@ func assertEqualCallExpectation(
 	}
 
 	assertEqualIntPointer(t, path+".Count", expected.Count, actual.Count)
-	assertEqualHTTPCallExpectation(t, path+".HTTP", expected.HTTP, actual.HTTP)
-	assertEqualGRPCCallExpectation(t, path+".GRPC", expected.GRPC, actual.GRPC)
-}
-
-func assertEqualHTTPCallExpectation(
-	t *testing.T,
-	path string,
-	expected,
-	actual *model.HTTPCallExpectation,
-) {
-	t.Helper()
-
-	if expected == nil && actual == nil {
-		return
-	}
-	if expected == nil {
-		t.Errorf("Expected %s nil, got %+v", path, actual)
-		return
-	}
-	if actual == nil {
-		t.Errorf("Expected %s %+v, got nil", path, expected)
-		return
-	}
-
-	if expected.Method != actual.Method {
-		t.Errorf(
-			"Expected %s.Method %q, got %q",
-			path,
-			expected.Method,
-			actual.Method,
-		)
-	}
-
-	if expected.Path != actual.Path {
-		t.Errorf(
-			"Expected %s.Path %q, got %q",
-			path,
-			expected.Path,
-			actual.Path,
-		)
-	}
-
-	assertEqualStringSliceMap(
-		t,
-		path+".Query",
-		expected.Query,
-		actual.Query,
-	)
-
-	assertEqualStringSliceMap(
-		t,
-		path+".Headers",
-		expected.Headers,
-		actual.Headers,
-	)
-
-	if expected.Body != actual.Body {
-		t.Errorf(
-			"Expected %s.Body %q, got %q",
-			path,
-			expected.Body,
-			actual.Body,
-		)
-	}
-}
-
-func assertEqualGRPCCallExpectation(
-	t *testing.T,
-	path string,
-	expected,
-	actual *model.GRPCCallExpectation,
-) {
-	t.Helper()
-
-	if expected == nil && actual == nil {
-		return
-	}
-	if expected == nil {
-		t.Errorf("Expected %s nil, got %+v", path, actual)
-		return
-	}
-	if actual == nil {
-		t.Errorf("Expected %s %+v, got nil", path, expected)
-		return
-	}
-
-	if expected.Service != actual.Service {
-		t.Errorf(
-			"Expected %s.Service %q, got %q",
-			path,
-			expected.Service,
-			actual.Service,
-		)
-	}
-
-	if expected.Method != actual.Method {
-		t.Errorf(
-			"Expected %s.Method %q, got %q",
-			path,
-			expected.Method,
-			actual.Method,
-		)
-	}
-
-	assertEqualStringSliceMap(
-		t,
-		path+".Metadata",
-		expected.Metadata,
-		actual.Metadata,
-	)
-
-	assertEqualJSONValue(
-		t,
-		path+".Message",
-		expected.Message,
-		actual.Message,
-	)
-}
-
-func assertEqualHTTPRequestSpec(
-	t *testing.T,
-	path string,
-	expected,
-	actual *model.HTTPRequestSpec,
-) {
-	t.Helper()
-
-	if expected == nil && actual == nil {
-		return
-	}
-	if expected == nil {
-		t.Errorf("Expected %s nil, got %+v", path, actual)
-		return
-	}
-	if actual == nil {
-		t.Errorf("Expected %s %+v, got nil", path, expected)
-		return
-	}
-
-	if expected.Method != actual.Method {
-		t.Errorf(
-			"Expected %s.Method %q, got %q",
-			path,
-			expected.Method,
-			actual.Method,
-		)
-	}
-
-	if expected.URL != actual.URL {
-		t.Errorf(
-			"Expected %s.URL %q, got %q",
-			path,
-			expected.URL,
-			actual.URL,
-		)
-	}
-
-	assertEqualStringMap(
-		t,
-		path+".Query",
-		expected.Query,
-		actual.Query,
-	)
-
-	assertEqualStringSliceMap(
-		t,
-		path+".Headers",
-		expected.Headers,
-		actual.Headers,
-	)
-
-	if expected.Body != actual.Body {
-		t.Errorf(
-			"Expected %s.Body %q, got %q",
-			path,
-			expected.Body,
-			actual.Body,
-		)
-	}
-}
-
-func assertEqualHTTPExpectSpec(
-	t *testing.T,
-	path string,
-	expected,
-	actual *model.HTTPExpectSpec,
-) {
-	t.Helper()
-
-	if expected == nil && actual == nil {
-		return
-	}
-	if expected == nil {
-		t.Errorf("Expected %s nil, got %+v", path, actual)
-		return
-	}
-	if actual == nil {
-		t.Errorf("Expected %s %+v, got nil", path, expected)
-		return
-	}
-
-	if expected.Status != actual.Status {
-		t.Errorf(
-			"Expected %s.Status %d, got %d",
-			path,
-			expected.Status,
-			actual.Status,
-		)
-	}
-
-	if expected.Body != actual.Body {
-		t.Errorf(
-			"Expected %s.Body %q, got %q",
-			path,
-			expected.Body,
-			actual.Body,
-		)
-	}
-}
-
-func assertEqualGRPCRequestSpec(
-	t *testing.T,
-	path string,
-	expected,
-	actual *model.GRPCRequestSpec,
-) {
-	t.Helper()
-
-	if expected == nil && actual == nil {
-		return
-	}
-	if expected == nil {
-		t.Errorf("Expected %s nil, got %+v", path, actual)
-		return
-	}
-	if actual == nil {
-		t.Errorf("Expected %s %+v, got nil", path, expected)
-		return
-	}
-
-	if expected.Target != actual.Target {
-		t.Errorf(
-			"Expected %s.Target %q, got %q",
-			path,
-			expected.Target,
-			actual.Target,
-		)
-	}
-
-	if expected.Service != actual.Service {
-		t.Errorf(
-			"Expected %s.Service %q, got %q",
-			path,
-			expected.Service,
-			actual.Service,
-		)
-	}
-
-	if expected.Method != actual.Method {
-		t.Errorf(
-			"Expected %s.Method %q, got %q",
-			path,
-			expected.Method,
-			actual.Method,
-		)
-	}
-
-	assertEqualStringSliceMap(
-		t,
-		path+".Metadata",
-		expected.Metadata,
-		actual.Metadata,
-	)
-
-	assertEqualJSONValue(
-		t,
-		path+".Message",
-		expected.Message,
-		actual.Message,
-	)
-}
-
-func assertEqualGRPCExpectSpec(
-	t *testing.T,
-	path string,
-	expected,
-	actual *model.GRPCExpectSpec,
-) {
-	t.Helper()
-
-	if expected == nil && actual == nil {
-		return
-	}
-	if expected == nil {
-		t.Errorf("Expected %s nil, got %+v", path, actual)
-		return
-	}
-	if actual == nil {
-		t.Errorf("Expected %s %+v, got nil", path, expected)
-		return
-	}
-
-	if expected.Status != actual.Status {
-		t.Errorf(
-			"Expected %s.Status %q, got %q",
-			path,
-			expected.Status,
-			actual.Status,
-		)
-	}
-
-	assertEqualJSONValue(
-		t,
-		path+".Message",
-		expected.Message,
-		actual.Message,
-	)
+	assertEqualHTTPRequestPattern(t, path+".HTTP", expected.HTTP, actual.HTTP)
+	assertEqualGRPCRequestPattern(t, path+".GRPC", expected.GRPC, actual.GRPC)
 }
 
 func assertEqualIntPointer(
@@ -487,47 +172,6 @@ func assertEqualStringSlice(
 				i,
 				expected[i],
 				actual[i],
-			)
-		}
-	}
-}
-
-func assertEqualStringMap(
-	t *testing.T,
-	path string,
-	expected,
-	actual map[string]string,
-) {
-	t.Helper()
-
-	if len(expected) != len(actual) {
-		t.Errorf(
-			"Expected %s length %d, got %d",
-			path,
-			len(expected),
-			len(actual),
-		)
-		return
-	}
-
-	for key, expectedValue := range expected {
-		actualValue, ok := actual[key]
-		if !ok {
-			t.Errorf(
-				"Expected %s[%q] to exist",
-				path,
-				key,
-			)
-			continue
-		}
-
-		if expectedValue != actualValue {
-			t.Errorf(
-				"Expected %s[%q] %q, got %q",
-				path,
-				key,
-				expectedValue,
-				actualValue,
 			)
 		}
 	}
