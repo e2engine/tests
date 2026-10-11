@@ -9,7 +9,7 @@ spec:
       url: http://127.0.0.1:8083/ok
   expect:
     http:
-      status: 200
+      status_code: 200
     calls:
       - service_id: direct-real-http
         http:

@@ -18,6 +18,7 @@ spec:
       fixtures:
         - when:
             grpc:
+              service: TestService
               method: Check
             http:
               method: GET
@@ -26,4 +27,4 @@ spec:
             grpc:
               status: OK
             http:
-              status: 200
+              status_code: 200

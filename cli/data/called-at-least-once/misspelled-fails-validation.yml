@@ -3,17 +3,8 @@ started_at: 2026-08-19T15:16:47.974744Z
 finished_at: 2026-08-19T15:16:47.993394Z
 status: error
 environment_id: 7398ab887149ec5aa583c564a659a0b0a933ef27bacb675b081a2a752d8a3896
-environment_name: misspelled-called-at-least-once
+environment_name: misspelled-fails-validation
 test_id: ae619f9418f89041a5f6e0e952eae9fb9495e2c271b66739ffd6fae46f9ff30a
-test_name: misspelled-called-at-least-once
+test_name: misspelled-fails-validation
 summary:
   error: "invalid test execution input, environment.service.id: misspelled, validation: expected call references unknown environment service"
-  request:
-    http:
-      method: GET
-      url: http://127.0.0.1:8083/healthz
-  expected_calls:
-    - service_id: misspelled
-      http:
-        method: GET
-        path: /healthz

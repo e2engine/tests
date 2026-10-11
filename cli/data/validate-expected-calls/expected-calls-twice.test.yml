@@ -9,7 +9,7 @@ spec:
       url: http://127.0.0.1:8083/healthz
   expect:
     http:
-      status: 200
+      status_code: 200
     calls:
       - service_id: expected-calls-twice
         count: 2

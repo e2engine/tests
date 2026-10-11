@@ -10,11 +10,11 @@ spec:
 
   expect:
     http:
-      status: 200
+      status_code: 200
 
     calls:
       - service_id: dependency
         http:
           method: POST
           path: /check
-          body: '{"broken":'
+          body_json: '{"broken":'

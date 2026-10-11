@@ -10,4 +10,4 @@ spec:
 
   expect:
     http:
-      status: 599
+      status_code: 599

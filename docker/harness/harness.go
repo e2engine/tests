@@ -148,6 +148,7 @@ func (h *Harness) RunCommand(
 		"-v", h.dataVolume + ":/testdata",
 		"-e", "E2ENGINE_CONFIG_PATH=" + containerConfigPath,
 		"-e", "E2ENGINE_DATA_DIR=/testdata",
+		"-e", "E2ENGINE_RUNNER_WORKER_REPORTER_DUMP_PAYLOAD=true",
 	}
 
 	args = append(args, "e2engine:local")

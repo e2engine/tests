@@ -11,11 +11,16 @@ summary:
     http:
       method: GET
       url: http://127.0.0.1:8083/healthz
+      headers:
+        "E2engine-Test-Execution-Id":
+          - "c1079d334b1a17b4a5fa7588a90d045ed01ea241c53ab51afa0d8b8620837e7b"
   response:
     http:
       status_code: 200
-  expected_calls:
+  calls:
     - service_id: minimal-mocked-called-at-least-once
+      count: 1
       http:
         method: GET
         path: /healthz
+        response_status_code: 200

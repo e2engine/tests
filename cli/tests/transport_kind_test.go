@@ -32,6 +32,8 @@ func TestTransportKind(t *testing.T) {
 		captureLogs         bool
 		crashRunner         bool
 		allowExpiry         bool
+		e2engineHeader      bool
+		e2engineHeader2     bool
 	}{
 		{
 			name:         "default", // direct transport kind is default
@@ -42,6 +44,8 @@ func TestTransportKind(t *testing.T) {
 			services: []Service{
 				{Name: "gateway-http-path"},
 			},
+			e2engineHeader:  true,
+			e2engineHeader2: true,
 		},
 		{
 			name:         "direct",
@@ -54,6 +58,8 @@ func TestTransportKind(t *testing.T) {
 			services: []Service{
 				{Name: "gateway-http-path"},
 			},
+			e2engineHeader:  true,
+			e2engineHeader2: true,
 		},
 		{
 			name:         "socket",
@@ -67,6 +73,8 @@ func TestTransportKind(t *testing.T) {
 			services: []Service{
 				{Name: "gateway-http-path"},
 			},
+			e2engineHeader:  true,
+			e2engineHeader2: true,
 		},
 		{
 			name:                "socket, long",
@@ -81,7 +89,9 @@ func TestTransportKind(t *testing.T) {
 			services: []Service{
 				{Name: "gateway-http-path", Args: []string{"2"}},
 			},
-			long: true,
+			long:            true,
+			e2engineHeader:  true,
+			e2engineHeader2: true,
 		},
 		{
 			name:         "socket, grpc, error",
@@ -138,6 +148,8 @@ func TestTransportKind(t *testing.T) {
 			services: []Service{
 				{Name: "gateway-http-path"},
 			},
+			e2engineHeader:  true,
+			e2engineHeader2: true,
 		},
 	}
 
@@ -206,6 +218,8 @@ func TestTransportKind(t *testing.T) {
 				path.Join(dataDir, test.testSpec+".test.yml"),
 			)
 
+			t.Setenv("E2ENGINE_RUNNER_WORKER_REPORTER_DUMP_PAYLOAD", "true")
+
 			// execute test
 			testExecutionID := h.RunTest(
 				ctx,
@@ -271,6 +285,10 @@ func TestTransportKind(t *testing.T) {
 				expectedTestExecution2.EnvironmentID = environmentID
 				expectedTestExecution2.StartedAt = actualTestExecution2.StartedAt
 				expectedTestExecution2.FinishedAt = actualTestExecution2.FinishedAt
+				if test.e2engineHeader2 {
+					expectedTestExecution2.Summary.Request.HTTP.Headers["E2engine-Test-Execution-Id"] =
+						[]string{testExecutionID}
+				}
 
 				util.AssertEqualTestExecutions(
 					t,

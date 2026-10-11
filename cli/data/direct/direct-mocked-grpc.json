@@ -10,6 +10,7 @@
   "summary": {
     "request": {
       "grpc": {
+        "target": "127.0.0.1:8083",
         "service": "entitlements.v1.EntitlementsService",
         "service_id": "direct-mocked-grpc",
         "method": "CheckEntitlement",
@@ -23,23 +24,17 @@
         "status": "OK",
         "message": {
           "entitled": true
-        },
-        "metadata": {
-          "content-type": [
-            "application/grpc"
-          ]
         }
       }
     },
-    "expected_calls": [
+    "calls": [
       {
         "service_id": "direct-mocked-grpc",
+        "count": 1,
         "grpc": {
           "service": "entitlements.v1.EntitlementsService",
           "method": "CheckEntitlement",
-          "message": {
-            "customer_id": "customer-1"
-          }
+          "response_status": "OK"
         }
       }
     ]

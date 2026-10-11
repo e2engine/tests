@@ -18,5 +18,6 @@ spec:
       fixtures:
         - when:
             grpc:
+              service: TestService
               method: Check
           then: {}

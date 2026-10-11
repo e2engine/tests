@@ -141,7 +141,7 @@ func TestValidateEnvironment(t *testing.T) {
 		{
 			name:        "http-with-proto",
 			stdout:      "",
-			stderr:      "invalid spec, spec.kind: environment, validation: proto spec not allowed for HTTP service",
+			stderr:      "invalid spec, spec.kind: environment, validation: proto spec is not allowed for HTTP service",
 			expectError: true,
 		},
 		{
@@ -268,25 +268,25 @@ func TestValidateEnvironment(t *testing.T) {
 		{
 			name:        "http-fixture-status-too-low",
 			stdout:      "",
-			stderr:      "invalid environment spec, fields: Spec.Services[0].Fixtures[0].Then.HTTP.Status",
+			stderr:      "invalid environment spec, fields: Spec.Services[0].Fixtures[0].Then.HTTP.StatusCode",
 			expectError: true,
 		},
 		{
 			name:        "http-fixture-status-too-high",
 			stdout:      "",
-			stderr:      "invalid environment spec, fields: Spec.Services[0].Fixtures[0].Then.HTTP.Status",
+			stderr:      "invalid environment spec, fields: Spec.Services[0].Fixtures[0].Then.HTTP.StatusCode",
 			expectError: true,
 		},
 		{
 			name:        "http-fixture-invalid-request-json",
 			stdout:      "",
-			stderr:      "invalid environment spec, fields: Spec.Services[0].Fixtures[0].When.HTTP.Body",
+			stderr:      "invalid environment spec, fields: Spec.Services[0].Fixtures[0].When.HTTP.BodyJSON",
 			expectError: true,
 		},
 		{
 			name:        "http-fixture-invalid-response-json",
 			stdout:      "",
-			stderr:      "invalid environment spec, fields: Spec.Services[0].Fixtures[0].Then.HTTP.Body",
+			stderr:      "invalid environment spec, fields: Spec.Services[0].Fixtures[0].Then.HTTP.BodyJSON",
 			expectError: true,
 		},
 		{

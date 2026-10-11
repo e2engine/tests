@@ -9,17 +9,28 @@ test_name: direct-real-grpc
 summary:
   request:
     grpc:
+      target: 127.0.0.1:8083
       service: ok.v1.OKService
       service_id: direct-real-grpc
       method: OK
+      metadata:
+        "e2engine-test-execution-id":
+          - "c1079d334b1a17b4a5fa7588a90d045ed01ea241c53ab51afa0d8b8620837e7b"
   response:
     grpc:
       status: OK
       metadata:
         "content-type":
           - "application/grpc"
-  expected_calls:
+      message:
+        <none>: null
+  calls:
     - service_id: direct-real-grpc
+      count: 1
       grpc:
         service: ok.v1.OKService
         method: OK
+        response_status: OK
+        metadata:
+          "content-type":
+            - "application/grpc"

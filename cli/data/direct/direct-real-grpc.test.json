@@ -1,5 +1,5 @@
 {
-  "kind": "test",
+  "kind": "Test",
   "version": "1.0.0",
   "name": "direct-real-grpc",
   "description": "direct-real-grpc service is called at least once (calls count is not specified)",
@@ -13,14 +13,26 @@
     },
     "expect": {
       "grpc": {
-        "status": "OK"
+        "status": "OK",
+        "metadata": {
+          "content-type": [
+            "application/grpc"
+          ]
+        }
       },
       "calls": [
         {
           "service_id": "direct-real-grpc",
+          "count": 1,
           "grpc": {
             "service": "ok.v1.OKService",
-            "method": "OK"
+            "method": "OK",
+            "metadata": {
+              "content-type": [
+                "application/grpc"
+              ]
+            },
+            "response_status": "OK"
           }
         }
       ]

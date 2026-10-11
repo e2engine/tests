@@ -8,13 +8,8 @@ spec:
   request:
     http:
       method: GET
-      url: http://127.0.0.1:8082/error
+      url: http://127.0.0.1:9000/error
   expect:
     http:
-      status: 200
-      body: '{"status":"ok"}'
-    calls:
-      - service_id: gateway
-        http:
-          method: GET
-          path: /error
+      status_code: 200
+      body_json: '{"status":"ok"}'

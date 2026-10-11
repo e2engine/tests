@@ -10,4 +10,4 @@ spec:
 
   expect:
     http:
-      status: 100
+      status_code: 100

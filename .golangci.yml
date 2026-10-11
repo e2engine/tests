@@ -98,6 +98,11 @@ linters:
           - gosec
         text: G204
 
+      - path: ^util/compare_http\.go$
+        linters:
+          - gocritic
+        text: "ifElseChain:"
+
       - path: ^docker/harness/(harness|service)\.go$
         linters:
           - goconst

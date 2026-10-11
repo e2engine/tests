@@ -13,4 +13,4 @@ spec:
         - when: {}
           then:
             http:
-              status: 200
+              status_code: 200

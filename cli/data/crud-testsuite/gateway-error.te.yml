@@ -10,20 +10,18 @@ summary:
   request:
     http:
       method: GET
-      url: http://127.0.0.1:8082/error
+      url: http://127.0.0.1:9000/error
+      headers:
+        "E2engine-Test-Execution-Id":
+          - "c1079d334b1a17b4a5fa7588a90d045ed01ea241c53ab51afa0d8b8620837e7b"
   response:
     http:
       status_code: 500
       body_json: '{"error":"simulated error response"}'
-  expected_calls:
-    - service_id: gateway
-      http:
-        method: GET
-        path: /error
   deviations:
     - field: status_code
       expected: "200"
       actual: "500"
-    - field: body
+    - field: body_json
       expected: '{"status":"ok"}'
       actual: '{"error":"simulated error response"}'

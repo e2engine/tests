@@ -23,21 +23,21 @@ tests:
       request:
         http:
           method: GET
-          url: http://127.0.0.1:8082/check
+          url: http://127.0.0.1:9000/check
+          headers:
+            "E2engine-Test-Execution-Id":
+              - "c1079d334b1a17b4a5fa7588a90d045ed01ea241c53ab51afa0d8b8620837e7b"
       response:
         http:
           status_code: 200
           body_json: '{"status":"ok"}'
-      expected_calls:
+      calls:
         - service_id: entitlements
           count: 1
           http:
             method: GET
             path: /healthz
-        - service_id: gateway
-          http:
-            method: GET
-            path: /check
+            response_status_code: 200
   - id: f5497dfbbf8392b4828f5323c07e4b5cc8026790caca7b3065350413bebbd4e3
     started_at: 2026-08-19T15:16:47.974744Z
     finished_at: 2026-08-19T15:16:47.993394Z
@@ -50,20 +50,18 @@ tests:
       request:
         http:
           method: GET
-          url: http://127.0.0.1:8082/error
+          url: http://127.0.0.1:9000/error
+          headers:
+            "E2engine-Test-Execution-Id":
+              - "c1079d334b1a17b4a5fa7588a90d045ed01ea241c53ab51afa0d8b8620837e7b"
       response:
         http:
           status_code: 500
           body_json: '{"error":"simulated error response"}'
-      expected_calls:
-        - service_id: gateway
-          http:
-            method: GET
-            path: /error
       deviations:
         - field: status_code
           expected: "200"
           actual: "500"
-        - field: body
+        - field: body_json
           expected: '{"status":"ok"}'
           actual: '{"error":"simulated error response"}'

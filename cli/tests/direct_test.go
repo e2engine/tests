@@ -5,10 +5,7 @@ import (
 	"path"
 	"testing"
 
-	"github.com/e2engine/core/model"
-
 	"github.com/e2engine/tests/cli/harness"
-	"github.com/e2engine/tests/util"
 )
 
 func TestDirect(t *testing.T) {
@@ -20,25 +17,54 @@ func TestDirect(t *testing.T) {
 	}
 
 	tests := []struct {
-		name     string
-		services []string
+		name        string
+		services    []string
+		checkParams func(id string) *checkTestExecutionParams
 	}{
 		{
 			name: "direct-mocked-http",
+			checkParams: func(id string) *checkTestExecutionParams {
+				return &checkTestExecutionParams{
+					useHTTPRequestHeaders: map[string]string{
+						"E2engine-Test-Execution-Id": id,
+					},
+				}
+			},
 		},
 		{
 			name: "direct-mocked-grpc",
+			checkParams: func(id string) *checkTestExecutionParams {
+				return &checkTestExecutionParams{
+					useGRPCRequestMetadata: map[string]string{
+						"e2engine-test-execution-id": id,
+					},
+				}
+			},
 		},
 		{
 			name: "direct-real-http",
 			services: []string{
 				"ok-http",
 			},
+			checkParams: func(id string) *checkTestExecutionParams {
+				return &checkTestExecutionParams{
+					useHTTPRequestHeaders: map[string]string{
+						"E2engine-Test-Execution-Id": id,
+					},
+				}
+			},
 		},
 		{
 			name: "direct-real-grpc",
 			services: []string{
 				"ok-grpc",
+			},
+			checkParams: func(id string) *checkTestExecutionParams {
+				return &checkTestExecutionParams{
+					useGRPCRequestMetadata: map[string]string{
+						"e2engine-test-execution-id": id,
+					},
+				}
 			},
 		},
 	}
@@ -90,6 +116,7 @@ func TestDirect(t *testing.T) {
 						),
 					)
 
+					t.Setenv("E2ENGINE_RUNNER_WORKER_REPORTER_DUMP_PAYLOAD", "true")
 					testExecutionID := h.RunTest(
 						ctx,
 						testID,
@@ -101,24 +128,20 @@ func TestDirect(t *testing.T) {
 						testExecutionID,
 					)
 
-					expectedTestExecution := util.Load[model.TestExecution](
-						t,
-						path.Join(
-							dataDir,
-							test.name+"."+format,
-						),
-					)
+					if test.checkParams == nil {
+						test.checkParams = func(id string) *checkTestExecutionParams {
+							return nil
+						}
+					}
 
-					expectedTestExecution.ID = testExecutionID
-					expectedTestExecution.TestID = testID
-					expectedTestExecution.EnvironmentID = environmentID
-					expectedTestExecution.StartedAt = actualTestExecution.StartedAt
-					expectedTestExecution.FinishedAt = actualTestExecution.FinishedAt
-
-					util.AssertEqualTestExecutions(
+					checkTestExecution(
 						t,
-						&expectedTestExecution,
+						testExecutionID,
+						environmentID,
+						testID,
+						path.Join(dataDir, test.name+".yml"),
 						&actualTestExecution,
+						test.checkParams(testExecutionID),
 					)
 				})
 			}

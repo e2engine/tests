@@ -12,13 +12,12 @@ spec:
       url: http://127.0.0.1:8082/check
   expect:
     http:
-      status: 200
-      body: '{"status":"ok"}'
+      status_code: 200
+      body_json: '{"status":"ok"}'
     calls:
       - service_id: entitlements
         count: 1
         grpc:
           service: entitlements.v1.EntitlementsService
           method: CheckEntitlement
-          message:
-            customer_id: customer-2
+          message: '{"customer_id": "customer-2"}'

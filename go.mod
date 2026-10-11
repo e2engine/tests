@@ -3,7 +3,7 @@ module github.com/e2engine/tests
 go 1.27
 
 require (
-	github.com/e2engine/core v0.2.0
+	github.com/e2engine/core v0.2.1
 	github.com/e2engine/instrumentation-go/grpc v0.1.1
 	github.com/e2engine/instrumentation-go/http v0.1.1
 	google.golang.org/grpc v1.84.0
@@ -16,8 +16,8 @@ require (
 	github.com/ygrebnov/errorc v0.6.1 // indirect
 	github.com/ygrebnov/keys v0.2.0 // indirect
 	github.com/ygrebnov/model v0.7.5 // indirect
-	golang.org/x/net v0.59.0 // indirect
-	golang.org/x/sys v0.48.0 // indirect
-	golang.org/x/text v0.42.0 // indirect
-	google.golang.org/genproto/googleapis/rpc v0.0.0-20260928230214-8a89bd6388cc // indirect
+	golang.org/x/net v0.61.0 // indirect
+	golang.org/x/sys v0.49.0 // indirect
+	golang.org/x/text v0.43.0 // indirect
+	google.golang.org/genproto/googleapis/rpc v0.0.0-20261012220534-4341edf3f941 // indirect
 )

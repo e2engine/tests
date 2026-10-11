@@ -8,13 +8,3 @@ test_id: ae619f9418f89041a5f6e0e952eae9fb9495e2c271b66739ffd6fae46f9ff30a
 test_name: real-not-calling-dependency
 summary:
   error: "invalid test execution input, environment.service.id: dependency, validation: expected call references unknown environment service"
-  request:
-    http:
-      method: GET
-      url: http://127.0.0.1:8082/ok
-  expected_calls:
-    - service_id: dependency
-      count: 1
-      http:
-        method: GET
-        path: /dependency

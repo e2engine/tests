@@ -11,25 +11,35 @@ summary:
     http:
       method: GET
       url: http://127.0.0.1:8082/check
+      headers:
+        "E2engine-Test-Execution-Id":
+          - "c1079d334b1a17b4a5fa7588a90d045ed01ea241c53ab51afa0d8b8620837e7b"
 
   response:
       http:
         status_code: 502
-        body_text: dependency returned non-200 status
+        body_json: "dependency returned non-200 status\n"
 
-  expected_calls:
+  calls:
     - service_id: entitlements
       count: 1
       http:
         method: GET
         path: /healthz
+        response_status_code: 501
+    - service_id: gateway
+      count: 1
+      http:
+        method: GET
+        path: /check
+        response_status_code: 502
 
   deviations:
     - field: status_code
       expected: "200"
       actual: "502"
 
-    - field: body
+    - field: body_json
       expected: '{"status":"ok"}'
       actual: |
         dependency returned non-200 status

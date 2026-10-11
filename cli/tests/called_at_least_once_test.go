@@ -5,26 +5,38 @@ import (
 	"path"
 	"testing"
 
-	"github.com/e2engine/core/model"
-
 	"github.com/e2engine/tests/cli/harness"
-	"github.com/e2engine/tests/util"
 )
 
 func TestServiceCalledAtLeastOnce(t *testing.T) {
 	dataDir := "../data/called-at-least-once"
 
 	tests := []struct {
-		name string
+		name        string
+		checkParams func(id string) *checkTestExecutionParams
 	}{
 		{
 			name: "minimal-mocked-called-at-least-once",
+			checkParams: func(id string) *checkTestExecutionParams {
+				return &checkTestExecutionParams{
+					useHTTPRequestHeaders: map[string]string{
+						"E2engine-Test-Execution-Id": id,
+					},
+				}
+			},
 		},
 		{
-			name: "misspelled-called-at-least-once",
+			name: "misspelled-fails-validation",
 		},
 		{
 			name: "one-of-two-mocked-not-called",
+			checkParams: func(id string) *checkTestExecutionParams {
+				return &checkTestExecutionParams{
+					useHTTPRequestHeaders: map[string]string{
+						"E2engine-Test-Execution-Id": id,
+					},
+				}
+			},
 		},
 	}
 
@@ -62,17 +74,20 @@ func TestServiceCalledAtLeastOnce(t *testing.T) {
 			// get testexecution by ID
 			actualTestExecution := h.GetTestExecution(ctx, testExecutionID)
 
-			expectedTestExecution := util.Load[model.TestExecution](
+			if test.checkParams == nil {
+				test.checkParams = func(id string) *checkTestExecutionParams {
+					return nil
+				}
+			}
+			checkTestExecution(
 				t,
+				testExecutionID,
+				environmentID,
+				testID,
 				path.Join(dataDir, test.name+".yml"),
+				&actualTestExecution,
+				test.checkParams(testExecutionID),
 			)
-			expectedTestExecution.ID = testExecutionID
-			expectedTestExecution.TestID = testID
-			expectedTestExecution.EnvironmentID = environmentID
-			expectedTestExecution.StartedAt = actualTestExecution.StartedAt
-			expectedTestExecution.FinishedAt = actualTestExecution.FinishedAt
-
-			util.AssertEqualTestExecutions(t, &expectedTestExecution, &actualTestExecution)
 		})
 	}
 }

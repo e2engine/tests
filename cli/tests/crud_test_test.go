@@ -101,6 +101,7 @@ func TestCRUDTest(t *testing.T) {
 	})
 
 	// execute test, expect success
+	t.Setenv("E2ENGINE_RUNNER_WORKER_REPORTER_DUMP_PAYLOAD", "true")
 	testExecutionID := h.RunTest(
 		ctx,
 		testID,
@@ -113,12 +114,18 @@ func TestCRUDTest(t *testing.T) {
 		t.Fatalf("Expected 1 test execution, got: %d", len(executions2))
 	}
 
+	params := &checkTestExecutionParams{
+		useHTTPRequestHeaders: map[string]string{
+			"E2engine-Test-Execution-Id": testExecutionID,
+		},
+	}
+
 	actualExecution2 := executions2[0]
-	checkTestExecution(t, testExecutionID, environmentID, testID, execSpecPath, &actualExecution2)
+	checkTestExecution(t, testExecutionID, environmentID, testID, execSpecPath, &actualExecution2, params)
 
 	// get testexecution by ID
 	actualTestExecution4 := h.GetTestExecution(ctx, testExecutionID)
-	checkTestExecution(t, testExecutionID, environmentID, testID, execSpecPath, &actualTestExecution4)
+	checkTestExecution(t, testExecutionID, environmentID, testID, execSpecPath, &actualTestExecution4, params)
 
 	// delete testexecution by ID
 	h.DeleteTestExecution(ctx, testExecutionID, "")

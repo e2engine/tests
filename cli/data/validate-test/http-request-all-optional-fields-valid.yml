@@ -8,12 +8,13 @@ spec:
       method: POST
       url: http://localhost/test
       query:
-        key: value
+        key:
+          - value
       headers:
         Content-Type:
           - application/json
-      body: '{"value":"test"}'
+      body_json: '{"value":"test"}'
 
   expect:
     http:
-      status: 200
+      status_code: 200

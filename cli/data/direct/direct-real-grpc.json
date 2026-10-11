@@ -10,6 +10,7 @@
   "summary": {
     "request": {
       "grpc": {
+        "target": "127.0.0.1:8083",
         "service": "ok.v1.OKService",
         "service_id": "direct-real-grpc",
         "method": "OK"
@@ -25,12 +26,19 @@
         }
       }
     },
-    "expected_calls": [
+    "calls": [
       {
         "service_id": "direct-real-grpc",
+        "count": 1,
         "grpc": {
           "service": "ok.v1.OKService",
-          "method": "OK"
+          "method": "OK",
+          "response_status": "OK",
+          "metadata": {
+            "content-type": [
+              "application/grpc"
+            ]
+          }
         }
       }
     ]

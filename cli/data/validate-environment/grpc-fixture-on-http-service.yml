@@ -15,9 +15,10 @@ spec:
               method: GET
               path: /healthz
             grpc:
+              service: Service
               method: Check
           then:
             http:
-              status: 200
+              status_code: 200
             grpc:
               status: OK

@@ -14,6 +14,7 @@ spec:
       fixtures:
         - when:
             grpc:
+              service: OKService
               method: OK
           then:
             grpc:

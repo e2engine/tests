@@ -22,6 +22,7 @@ spec:
       fixtures:
         - when:
             grpc:
+              service: Service
               method: Call
           then:
             grpc:

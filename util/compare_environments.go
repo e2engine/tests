@@ -7,6 +7,7 @@ import (
 	"testing"
 
 	"github.com/e2engine/core/model"
+	"github.com/e2engine/core/model/matcher"
 )
 
 func AssertEqualEnvironments(t *testing.T, expected, actual *model.Environment) {
@@ -133,7 +134,7 @@ func assertEqualServiceSpec(
 		)
 	}
 
-	assertEqualServiceDefaults(
+	assertEqualRequestDefaults(
 		t,
 		prefix("RequestDefaults"),
 		expected.RequestDefaults,
@@ -167,11 +168,11 @@ func assertEqualServiceSpec(
 	}
 }
 
-func assertEqualServiceDefaults(
+func assertEqualRequestDefaults(
 	t *testing.T,
 	path string,
 	expected,
-	actual *model.ServiceDefaults,
+	actual *model.RequestDefaults,
 ) {
 	t.Helper()
 
@@ -454,14 +455,14 @@ func assertEqualFixtureWhen(
 ) {
 	t.Helper()
 
-	assertEqualHTTPFixtureWhen(
+	assertEqualHTTPRequestPattern(
 		t,
 		path+".HTTP",
 		expected.HTTP,
 		actual.HTTP,
 	)
 
-	assertEqualGRPCFixtureWhen(
+	assertEqualGRPCRequestPattern(
 		t,
 		path+".GRPC",
 		expected.GRPC,
@@ -477,14 +478,14 @@ func assertEqualFixtureThen(
 ) {
 	t.Helper()
 
-	assertEqualHTTPFixtureThen(
+	assertEqualHTTPResponse(
 		t,
 		path+".HTTP",
 		expected.HTTP,
 		actual.HTTP,
 	)
 
-	assertEqualGRPCFixtureThen(
+	assertEqualGRPCResponse(
 		t,
 		path+".GRPC",
 		expected.GRPC,
@@ -492,180 +493,7 @@ func assertEqualFixtureThen(
 	)
 }
 
-func assertEqualHTTPFixtureWhen(
-	t *testing.T,
-	path string,
-	expected,
-	actual *model.HTTPFixtureWhen,
-) {
-	t.Helper()
-
-	if expected == nil && actual == nil {
-		return
-	}
-	if expected == nil {
-		t.Errorf("Expected %s nil, got %+v", path, actual)
-		return
-	}
-	if actual == nil {
-		t.Errorf("Expected %s %+v, got nil", path, expected)
-		return
-	}
-
-	if expected.Method != actual.Method {
-		t.Errorf(
-			"Expected %s.Method %q, got %q",
-			path,
-			expected.Method,
-			actual.Method,
-		)
-	}
-
-	if expected.Path != actual.Path {
-		t.Errorf(
-			"Expected %s.Path %q, got %q",
-			path,
-			expected.Path,
-			actual.Path,
-		)
-	}
-
-	assertEqualStringSliceMap(
-		t,
-		path+".Headers",
-		expected.Headers,
-		actual.Headers,
-	)
-
-	if expected.Body != actual.Body {
-		t.Errorf(
-			"Expected %s.Body %q, got %q",
-			path,
-			expected.Body,
-			actual.Body,
-		)
-	}
-}
-
-func assertEqualHTTPFixtureThen(
-	t *testing.T,
-	path string,
-	expected,
-	actual *model.HTTPFixtureThen,
-) {
-	t.Helper()
-
-	if expected == nil && actual == nil {
-		return
-	}
-	if expected == nil {
-		t.Errorf("Expected %s nil, got %+v", path, actual)
-		return
-	}
-	if actual == nil {
-		t.Errorf("Expected %s %+v, got nil", path, expected)
-		return
-	}
-
-	if expected.Status != actual.Status {
-		t.Errorf(
-			"Expected %s.Status %d, got %d",
-			path,
-			expected.Status,
-			actual.Status,
-		)
-	}
-
-	assertEqualStringSliceMap(
-		t,
-		path+".Headers",
-		expected.Headers,
-		actual.Headers,
-	)
-
-	if expected.Body != actual.Body {
-		t.Errorf(
-			"Expected %s.Body %q, got %q",
-			path,
-			expected.Body,
-			actual.Body,
-		)
-	}
-}
-
-func assertEqualGRPCFixtureWhen(
-	t *testing.T,
-	path string,
-	expected,
-	actual *model.GRPCFixtureWhen,
-) {
-	t.Helper()
-
-	if expected == nil && actual == nil {
-		return
-	}
-	if expected == nil {
-		t.Errorf("Expected %s nil, got %+v", path, actual)
-		return
-	}
-	if actual == nil {
-		t.Errorf("Expected %s %+v, got nil", path, expected)
-		return
-	}
-
-	if expected.Method != actual.Method {
-		t.Errorf(
-			"Expected %s.Method %q, got %q",
-			path,
-			expected.Method,
-			actual.Method,
-		)
-	}
-
-	assertEqualJSONValue(
-		t,
-		path+".Message",
-		expected.Message,
-		actual.Message,
-	)
-}
-
-func assertEqualGRPCFixtureThen(
-	t *testing.T,
-	path string,
-	expected,
-	actual *model.GRPCFixtureThen,
-) {
-	t.Helper()
-
-	if expected == nil && actual == nil {
-		return
-	}
-	if expected == nil {
-		t.Errorf("Expected %s nil, got %+v", path, actual)
-		return
-	}
-	if actual == nil {
-		t.Errorf("Expected %s %+v, got nil", path, expected)
-		return
-	}
-
-	if expected.Status != actual.Status {
-		t.Errorf(
-			"Expected %s.Status %q, got %q",
-			path,
-			expected.Status,
-			actual.Status,
-		)
-	}
-
-	assertEqualJSONValue(
-		t,
-		path+".Message",
-		expected.Message,
-		actual.Message,
-	)
-}
+const dateHeaderKey = "Date"
 
 func assertEqualStringSliceMap(
 	t *testing.T,
@@ -703,7 +531,61 @@ func assertEqualStringSliceMap(
 			continue
 		}
 
-		if key == "Date" {
+		if key == dateHeaderKey {
+			continue // TODO: replace with check.
+		}
+		for i := range expectedValues {
+			if expectedValues[i] != actualValues[i] {
+				t.Errorf(
+					"Expected %s[%q][%d] %q, got %q",
+					path,
+					key,
+					i,
+					expectedValues[i],
+					actualValues[i],
+				)
+			}
+		}
+	}
+}
+
+func assertEqualStringMatcherSliceMap(
+	t *testing.T,
+	path string,
+	expected,
+	actual map[string][]matcher.String,
+) {
+	t.Helper()
+
+	if len(expected) != len(actual) {
+		t.Errorf(
+			"Expected %s length %d, got %d",
+			path,
+			len(expected),
+			len(actual),
+		)
+		return
+	}
+
+	for key, expectedValues := range expected {
+		actualValues, ok := actual[key]
+		if !ok {
+			t.Errorf("Expected %s[%q] to exist", path, key)
+			continue
+		}
+
+		if len(expectedValues) != len(actualValues) {
+			t.Errorf(
+				"Expected %s[%q] length %d, got %d",
+				path,
+				key,
+				len(expectedValues),
+				len(actualValues),
+			)
+			continue
+		}
+
+		if key == dateHeaderKey {
 			continue // TODO: replace with check.
 		}
 		for i := range expectedValues {
